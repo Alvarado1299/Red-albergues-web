@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel administrador - Red de Albergues</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --accent: #22c55e;
+      --accent-soft: #bbf7d0;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --radius: 14px;
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background: radial-gradient(circle at top, #1e293b, #020617);
+      color: var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:1.5rem;
+    }
+    .shell{
+      width:100%;
+      max-width:960px;
+      display:grid;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,1.8fr);
+      gap:1.25rem;
+    }
+    @media(max-width:800px){
+      .shell{grid-template-columns:1fr;align-items:flex-start}
+    }
+    .card{
+      background: radial-gradient(circle at top left,#1f2937,#020617);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:1.25rem 1.4rem;
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:radial-gradient(circle at top,#22c55e33,transparent 60%);
+      opacity:0.4;
+      pointer-events:none;
+    }
+    h1{
+      font-size:1.5rem;
+      font-weight:700;
+      margin-bottom:0.4rem;
+    }
+    h2{
+      font-size:1.05rem;
+      margin-bottom:0.6rem;
+    }
+    p.desc{
+      color:var(--muted);
+      font-size:0.9rem;
+      margin-bottom:0.8rem;
+      max-width:28rem;
+    }
+    label{
+      font-size:0.8rem;
+      text-transform:uppercase;
+      letter-spacing:0.07em;
+      color:var(--muted);
+      margin-bottom:0.2rem;
+      display:block;
+    }
+    .input,.select{
+      width:100%;
+      border-radius:999px;
+      border:1px solid #1f2937;
+      background:#020617;
+      color:var(--text);
+      padding:0.45rem 0.9rem;
+      font-size:0.9rem;
+      outline:none;
+      transition:border-color 0.15s,box-shadow 0.15s,background 0.15s;
+    }
+    .input:focus,.select:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px #22c55e44;
+      background:#020617;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:0.6rem;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.45rem;
+      margin:0.4rem 0 0.3rem;
+      font-size:0.8rem;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:0.4rem;
+      padding:0.3rem 0.7rem;
+      border-radius:999px;
+      background:#020617;
+      border:1px solid #1f2937;
+      cursor:pointer;
+    }
+    .chip input{accent-color:#22c55e}
+    .btn{
+      border:none;
+      border-radius:999px;
+      padding:0.55rem 1.2rem;
+      font-size:0.9rem;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:0.4rem;
+      font-weight:500;
+      transition:transform 0.1s,box-shadow 0.1s,background 0.1s;
+    }
+    .btn-primary{
+      background:var(--accent);
+      color:#022c22;
+      box-shadow:0 12px 25px rgba(34,197,94,0.4);
+    }
+    .btn-primary:hover{
+      transform:translateY(-1px);
+      box-shadow:0 18px 35px rgba(34,197,94,0.5);
+    }
+    .btn-ghost{
+      background:transparent;
+      color:var(--muted);
+    }
+    .btn-ghost:hover{background:#020617}
+    .section-title{
+      font-size:0.75rem;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      color:var(--muted);
+      margin-bottom:0.3rem;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:0.35rem;
+      border-radius:999px;
+      padding:0.2rem 0.7rem;
+      background:#020617;
+      border:1px solid #1f2937;
+      font-size:0.75rem;
+      color:var(--muted);
+      margin-top:0.4rem;
+    }
+    .pill-dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#22c55e;
+    }
+    .small{
+      font-size:0.8rem;
+      color:var(--muted);
+    }
+    .error{
+      font-size:0.8rem;
+      color:var(--danger);
+      margin-top:0.3rem;
+      min-height:1.2rem;
+    }
+    .success{
+      font-size:0.8rem;
+      color:var(--accent-soft);
+      margin-top:0.3rem;
+      min-height:1.2rem;
+    }
+    .badge-user{
+      font-size:0.8rem;
+      color:var(--muted);
+      display:flex;
+      align-items:center;
+      gap:0.4rem;
+      margin-bottom:0.6rem;
+    }
+    .badge-user span{
+      padding:0.15rem 0.6rem;
+      background:#020617;
+      border-radius:999px;
+      border:1px solid #1f2937;
+    }
+    .hidden{display:none !important;}
+    .mt{margin-top:0.6rem;}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Columna izquierda: login / info -->
+    <section class="card">
+      <h1>Panel administrador</h1>
+      <p class="desc">
+        Acceso privado para registrar y actualizar albergues, campamentos e instalaciones
+        de la red. Usa tu correo y contraseña de administrador.
+      </p>
+
+      <div id="loginBox">
+        <label for="loginEmail">Correo</label>
+        <input id="loginEmail" class="input" type="email" placeholder="tucorreo@ejemplo.org" />
+
+        <label for="loginPassword" class="mt">Contraseña</label>
+        <input id="loginPassword" class="input" type="password" placeholder="••••••••" />
+
+        <div style="margin-top:0.8rem;display:flex;gap:0.6rem;align-items:center;">
+          <button id="btnLogin" class="btn btn-primary">Entrar</button>
+        </div>
+        <div id="loginError" class="error"></div>
+        <p class="small">
+          Si olvidaste la contraseña, cámbiala desde la consola de Firebase (Authentication).
+        </p>
+      </div>
+
+      <div id="loggedBox" class="hidden">
+        <div class="badge-user">
+          Sesión iniciada como <span id="userEmail"></span>
+        </div>
+        <button id="btnLogout" class="btn btn-ghost">Cerrar sesión</button>
+        <p class="small" style="margin-top:0.5rem;">
+          Mientras tengas la sesión abierta, puedes registrar nuevas instalaciones usando el formulario de la derecha.
+        </p>
+      </div>
+
+      <div style="margin-top:1.2rem;">
+        <div class="section-title">Estado</div>
+        <div class="pill">
+          <div class="pill-dot"></div>
+          <span id="estadoConexion">Conectando con Firebase…</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Columna derecha: formulario de instalación -->
+    <section class="card">
+      <h2>Registrar nueva instalación</h2>
+      <p class="desc">
+        Completa la información que conozcas. Los campos vacíos se guardarán como
+        <strong>"Sin información"</strong> para mantener la base de datos coherente.
+      </p>
+
+      <form id="formInstalacion">
+        <div class="mt">
+          <label for="nombre">Nombre de la instalación</label>
+          <input id="nombre" class="input" type="text" placeholder="Albergue / casa / campamento…" required />
+        </div>
+
+        <div class="grid-2 mt">
+          <div>
+            <label for="tipo">Tipo</label>
+            <select id="tipo" class="select">
+              <option value="Albergue">Albergue</option>
+              <option value="Campamento">Campamento</option>
+              <option value="Casa rural">Casa rural</option>
+              <option value="Residencia">Residencia</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div>
+            <label for="comunidad">Comunidad</label>
+            <input id="comunidad" class="input" type="text" placeholder="Asturias, Castilla y León…" />
+          </div>
+        </div>
+
+        <div class="grid-2 mt">
+          <div>
+            <label for="provincia">Provincia</label>
+            <input id="provincia" class="input" type="text" placeholder="Asturias, León…" />
+          </div>
+          <div>
+            <label for="municipio">Municipio / pueblo</label>
+            <input id="municipio" class="input" type="text" placeholder="Oviedo, Cistierna…" />
+          </div>
+        </div>
+
+        <div class="grid-2 mt">
+          <div>
+            <label for="plazasMin">Plazas mínimas</label>
+            <input id="plazasMin" class="input" type="number" min="0" placeholder="Ej: 30" />
+          </div>
+          <div>
+            <label for="plazasMax">Plazas máximas</label>
+            <input id="plazasMax" class="input" type="number" min="0" placeholder="Ej: 80" />
+          </div>
+        </div>
+
+        <div class="mt">
+          <div class="section-title">Características</div>
+          <div class="chips">
+            <label class="chip">
+              <input id="chkPiscina" type="checkbox" /> <span>Piscina</span>
+            </label>
+            <label class="chip">
+              <input id="chkAccesible" type="checkbox" /> <span>Accesible</span>
+            </label>
+            <label class="chip">
+              <input id="chkAlquilerExcl" type="checkbox" /> <span>Alquiler exclusivo</span>
+            </label>
+            <label class="chip">
+              <input id="chkCampoDep" type="checkbox" /> <span>Campo deportivo</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="mt">
+          <label for="valoracion">Valoración interna (1-5)</label>
+          <input id="valoracion" class="input" type="number" min="1" max="5" placeholder="Opcional" />
+        </div>
+
+        <div class="mt">
+          <label for="notas">Notas internas</label>
+          <input id="notas" class="input" type="text" placeholder="Comida, trato, cosas a tener en cuenta…" />
+        </div>
+
+        <div style="margin-top:1rem;display:flex;gap:0.7rem;align-items:center;">
+          <button type="submit" class="btn btn-primary">Guardar instalación</button>
+          <button type="reset" class="btn btn-ghost">Limpiar formulario</button>
+        </div>
+        <div id="formError" class="error"></div>
+        <div id="formOk" class="success"></div>
+      </form>
+    </section>
+  </div>
+
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <script>
+    // === 1) TU CONFIG DE FIREBASE ===
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_qFTqRsPwHTO9P8nyfikyWSAV1kt7k90",
+      authDomain: "red-albergues.firebaseapp.com",
+      projectId: "red-albergues",
+      storageBucket: "red-albergues.firebasestorage.app",
+      messagingSenderId: "325280024828",
+      appId: "1:325280024828:web:1bc121e6089e105d386f79",
+      measurementId: "G-JZXCJFMMEB"
+    };
+
+    // === 2) Inicializar Firebase ===
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    const estadoConexionEl = document.getElementById("estadoConexion");
+    estadoConexionEl.textContent = "Conectado a Firebase";
+
+    // === 3) Elementos del DOM ===
+    const loginBox = document.getElementById("loginBox");
+    const loggedBox = document.getElementById("loggedBox");
+    const loginEmailEl = document.getElementById("loginEmail");
+    const loginPasswordEl = document.getElementById("loginPassword");
+    const loginErrorEl = document.getElementById("loginError");
+    const userEmailEl = document.getElementById("userEmail");
+    const btnLogin = document.getElementById("btnLogin");
+    const btnLogout = document.getElementById("btnLogout");
+
+    const formInst = document.getElementById("formInstalacion");
+    const formErrorEl = document.getElementById("formError");
+    const formOkEl = document.getElementById("formOk");
+
+    const nombreEl = document.getElementById("nombre");
+    const tipoEl = document.getElementById("tipo");
+    const comunidadEl = document.getElementById("comunidad");
+    const provinciaEl = document.getElementById("provincia");
+    const municipioEl = document.getElementById("municipio");
+    const plazasMinEl = document.getElementById("plazasMin");
+    const plazasMaxEl = document.getElementById("plazasMax");
+    const chkPiscinaEl = document.getElementById("chkPiscina");
+    const chkAccesibleEl = document.getElementById("chkAccesible");
+    const chkAlquilerExclEl = document.getElementById("chkAlquilerExcl");
+    const chkCampoDepEl = document.getElementById("chkCampoDep");
+    const valoracionEl = document.getElementById("valoracion");
+    const notasEl = document.getElementById("notas");
+
+    function normalizarTexto(v) {
+      const t = (v || "").toString().trim();
+      return t === "" ? "Sin información" : t;
+    }
+
+    function normalizarNumero(v) {
+      const n = parseInt(v, 10);
+      return isNaN(n) ? null : n;
+    }
+
+    // === 4) Gestión de sesión ===
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        loginBox.classList.add("hidden");
+        loggedBox.classList.remove("hidden");
+        userEmailEl.textContent = user.email;
+        formInst.querySelector("button[type='submit']").disabled = false;
+        formErrorEl.textContent = "";
+      } else {
+        loginBox.classList.remove("hidden");
+        loggedBox.classList.add("hidden");
+        userEmailEl.textContent = "";
+        formInst.querySelector("button[type='submit']").disabled = true;
+        formErrorEl.textContent = "Inicia sesión para poder guardar instalaciones.";
+      }
+    });
+
+    // === 5) Login y logout ===
+    btnLogin.addEventListener("click", async () => {
+      loginErrorEl.textContent = "";
+      try {
+        const email = loginEmailEl.value.trim();
+        const pass = loginPasswordEl.value;
+        if (!email || !pass) {
+          loginErrorEl.textContent = "Introduce correo y contraseña.";
+          return;
+        }
+        await auth.signInWithEmailAndPassword(email, pass);
+      } catch (err) {
+        console.error(err);
+        if (err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+          loginErrorEl.textContent = "Correo o contraseña incorrectos.";
+        } else {
+          loginErrorEl.textContent = "Error al iniciar sesión. Inténtalo de nuevo.";
+        }
+      }
+    });
+
+    btnLogout.addEventListener("click", async () => {
+      await auth.signOut();
+    });
+
+    // === 6) Envío del formulario ===
+    formInst.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      formErrorEl.textContent = "";
+      formOkEl.textContent = "";
+
+      const user = auth.currentUser;
+      if (!user) {
+        formErrorEl.textContent = "Debes iniciar sesión para guardar.";
+        return;
+      }
+
+      const datos = {
+        nombre: normalizarTexto(nombreEl.value),
+        tipo: normalizarTexto(tipoEl.value),
+        comunidad: normalizarTexto(comunidadEl.value),
+        provincia: normalizarTexto(provinciaEl.value),
+        municipio: normalizarTexto(municipioEl.value),
+        plazas_min: normalizarNumero(plazasMinEl.value),
+        plazas_max: normalizarNumero(plazasMaxEl.value),
+        piscina: !!chkPiscinaEl.checked,
+        accesible: !!chkAccesibleEl.checked,
+        alquiler_exclusivo: !!chkAlquilerExclEl.checked,
+        tiene_campo_deportivo: !!chkCampoDepEl.checked,
+        valoracion_interna: normalizarNumero(valoracionEl.value),
+        notas_internas: normalizarTexto(notasEl.value),
+        creado_por: user.email || "desconocido",
+        creado_en: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      try {
+        await db.collection("instalaciones").add(datos);
+        formOkEl.textContent = "Instalación guardada correctamente.";
+        formInst.reset();
+      } catch (err) {
+        console.error(err);
+        formErrorEl.textContent = "Error al guardar. Revisa la conexión e inténtalo de nuevo.";
+      }
+    });
+  </script>
+</body>
+</html>
