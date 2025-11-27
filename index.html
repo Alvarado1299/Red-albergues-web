@@ -386,55 +386,32 @@
     </div>
   </div>
 
+    <!-- Firebase compat (app + Firestore) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <script>
-    const instalaciones = [
-      {
-        id: 1,
-        nombre: "Albergue Montes Claros",
-        tipo: "Albergue",
-        comunidad: "Asturias",
-        provincia: "Asturias",
-        municipio: "Oviedo",
-        plazas_min: 30,
-        plazas_max: 80,
-        piscina: false,
-        accesible: true,
-        alquiler_exclusivo: true,
-        tiene_campo_deportivo: true,
-        valoracion_interna: 5
-      },
-      {
-        id: 2,
-        nombre: "Campamento Valle Verde",
-        tipo: "Campamento",
-        comunidad: "Castilla y León",
-        provincia: "León",
-        municipio: "Cistierna",
-        plazas_min: 60,
-        plazas_max: 150,
-        piscina: true,
-        accesible: false,
-        alquiler_exclusivo: true,
-        tiene_campo_deportivo: true,
-        valoracion_interna: 4
-      },
-      {
-        id: 3,
-        nombre: "Casa Rural Fonte do Río",
-        tipo: "Casa rural",
-        comunidad: "Galicia",
-        provincia: "Lugo",
-        municipio: "Ribadeo",
-        plazas_min: 15,
-        plazas_max: 35,
-        piscina: true,
-        accesible: true,
-        alquiler_exclusivo: false,
-        tiene_campo_deportivo: false,
-        valoracion_interna: 4
-      }
-    ];
-     const listaInstalacionesEl = document.getElementById("listaInstalaciones");
+    // 1) Configuración de tu proyecto Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_qFTqRsPwHTO9P8nyfikyWSAV1kt7k90",
+      authDomain: "red-albergues.firebaseapp.com",
+      projectId: "red-albergues",
+      storageBucket: "red-albergues.firebasestorage.app",
+      messagingSenderId: "325280024828",
+      appId: "1:325280024828:web:1bc121e6089e105d386f79",
+      measurementId: "G-JZXCJFMMEB"
+    };
+
+    // 2) Inicializar Firebase y Firestore
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // 3) Estado en memoria
+    let instalaciones = [];
+    let inicialOrdenadas = [];
+
+    // 4) Referencias al DOM
+    const listaInstalacionesEl = document.getElementById("listaInstalaciones");
     const contadorResultadosEl = document.getElementById("contadorResultados");
     const emptyStateEl = document.getElementById("emptyState");
 
@@ -481,10 +458,12 @@
             <div>
               <div class="card-title">${inst.nombre}</div>
               <div class="card-location">
-                ${inst.municipio} · ${inst.provincia} · ${inst.comunidad}
+                ${inst.municipio || "Sin información"} ·
+                ${inst.provincia || "Sin información"} ·
+                ${inst.comunidad || "Sin información"}
               </div>
             </div>
-            <span class="chip-tipo">${inst.tipo}</span>
+            <span class="chip-tipo">${inst.tipo || "Sin información"}</span>
           </div>
           <div class="card-capacidad">${formatearCapacidad(inst)}</div>
           <div class="card-tags">
@@ -503,7 +482,8 @@
             </button>
           </div>
         `;
-  listaInstalacionesEl.appendChild(card);
+
+        listaInstalacionesEl.appendChild(card);
       });
     }
 
@@ -554,10 +534,26 @@
 
     btnLimpiar.addEventListener("click", limpiarFiltros);
 
-    const inicialOrdenadas = [...instalaciones].sort((a, b) =>
-      a.nombre.localeCompare(b.nombre, "es")
-    );
-    pintarInstalaciones(inicialOrdenadas);
+    // 5) Cargar datos desde Firestore
+    async function cargarInstalaciones() {
+      try {
+        const snapshot = await db.collection("instalaciones").get();
+        instalaciones = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        inicialOrdenadas = [...instalaciones].sort((a, b) =>
+          (a.nombre || "").localeCompare(b.nombre || "", "es")
+        );
+        pintarInstalaciones(inicialOrdenadas);
+      } catch (err) {
+        console.error("Error cargando instalaciones:", err);
+        emptyStateEl.style.display = "block";
+        emptyStateEl.textContent = "Error cargando datos. Intenta de nuevo más tarde.";
+      }
+    }
+
+    cargarInstalaciones();
   </script>
 </body>
 </html>
