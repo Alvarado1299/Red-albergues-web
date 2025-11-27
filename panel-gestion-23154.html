@@ -51,6 +51,20 @@
       border: 1px solid var(--border);
       padding: 1rem 1.2rem;
       box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      margin-bottom: 1rem;
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
     }
 
     .grid-2 {
@@ -145,6 +159,7 @@
       display: flex;
       gap: 0.6rem;
       margin-top: 0.8rem;
+      flex-wrap: wrap;
     }
 
     .btn {
@@ -171,6 +186,14 @@
       border: 1px solid var(--border);
     }
 
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      padding-inline: 0.7rem;
+    }
+
     .status {
       margin-top: 0.7rem;
       font-size: 0.8rem;
@@ -195,9 +218,40 @@
 <body>
   <div class="app">
     <h1>Admin ProyectoAAG</h1>
-    <p>Formulario interno para añadir instalaciones a la base <strong>instalaciones</strong> de Firestore. No compartas esta URL.</p>
+    <p>Zona privada para añadir instalaciones a Firestore. Debe iniciarse sesión para poder ver y usar el formulario.</p>
 
-    <div class="card">
+    <!-- TARJETA DE LOGIN -->
+    <div id="loginCard" class="card">
+      <div class="card-header-row">
+        <div class="card-title">Acceso</div>
+      </div>
+      <p class="small">
+        Usa el usuario y contraseña que hayas creado en Firebase Authentication (método Email/Password).
+      </p>
+      <form id="loginForm">
+        <div class="field">
+          <div class="field-label">Correo electrónico</div>
+          <input id="loginEmail" class="input" type="email" required placeholder="tu_correo@ejemplo.com" />
+        </div>
+        <div class="field">
+          <div class="field-label">Contraseña</div>
+          <input id="loginPassword" class="input" type="password" required placeholder="********" />
+        </div>
+        <div class="btn-row">
+          <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+        </div>
+        <div id="loginStatus" class="status"></div>
+      </form>
+    </div>
+
+    <!-- TARJETA DE ADMIN (OCULTA SI NO HAY LOGIN) -->
+    <div id="adminCard" class="card" style="display:none;">
+      <div class="card-header-row">
+        <div class="card-title">Nueva instalación</div>
+        <button id="btnLogout" type="button" class="btn btn-ghost">Cerrar sesión</button>
+      </div>
+      <p class="small" id="userInfo"></p>
+
       <form id="formInstalacion">
         <!-- =====================
              IDENTIFICACIÓN BÁSICA
@@ -302,9 +356,7 @@
           </div>
         </div>
 
-        <!-- =====================
-             CONTACTO
-             ===================== -->
+        <!-- CONTACTO -->
         <div class="section-title">Contacto</div>
         <div class="row">
           <div class="field">
@@ -322,9 +374,7 @@
           <input id="web_oficial" class="input" type="url" placeholder="https://..." />
         </div>
 
-        <!-- =====================
-             CAPACIDAD / INSTALACIÓN
-             ===================== -->
+        <!-- CAPACIDAD -->
         <div class="section-title">Capacidad y estancias</div>
         <div class="row">
           <div class="field">
@@ -348,9 +398,7 @@
           </div>
         </div>
 
-        <!-- =====================
-             DISTANCIAS / SERVICIOS
-             ===================== -->
+        <!-- SERVICIOS CERCANOS -->
         <div class="section-title">Servicios cercanos</div>
         <div class="row">
           <div class="field">
@@ -363,9 +411,7 @@
           </div>
         </div>
 
-        <!-- =====================
-             NORMAS / SEGURIDAD
-             ===================== -->
+        <!-- NORMAS / SEGURIDAD -->
         <div class="section-title">Normas y seguridad</div>
         <div class="field">
           <div class="field-label">Restricciones / normas relevantes</div>
@@ -388,9 +434,7 @@
           <textarea id="riesgos_cercanos" class="textarea" placeholder="Río cercano, carretera, barranco, etc."></textarea>
         </div>
 
-        <!-- =====================
-             CARACTERÍSTICAS
-             ===================== -->
+        <!-- CARACTERÍSTICAS -->
         <div class="section-title">Características de la instalación</div>
         <div class="checkbox-group">
           <label><input id="piscina" type="checkbox" />Piscina</label>
@@ -408,14 +452,11 @@
           <label><input id="calefaccion" type="checkbox" />Calefacción</label>
           <label><input id="aire_acondicionado" type="checkbox" />Aire acondicionado</label>
           <label><input id="vallado" type="checkbox" />Recinto vallado</label>
-          <!-- NUEVOS -->
           <label><input id="zona_tiendas_campana" type="checkbox" />Zona para montar tiendas</label>
           <label><input id="espacio_intendencia" type="checkbox" />Espacio intendencia / botiquín</label>
         </div>
 
-        <!-- =====================
-             NOTAS / VALORACIÓN
-             ===================== -->
+        <!-- NOTAS / VALORACIÓN -->
         <div class="section-title">Notas internas / valoración</div>
         <div class="field">
           <div class="field-label">Notas públicas (lo que verán los demás)</div>
@@ -448,6 +489,7 @@
   <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
   <script>
     // MISMA CONFIG QUE EN LA WEB PÚBLICA
@@ -463,12 +505,59 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    // ELEMENTOS DOM LOGIN / ADMIN
+    const loginCard = document.getElementById("loginCard");
+    const adminCard = document.getElementById("adminCard");
+    const loginForm = document.getElementById("loginForm");
+    const loginEmail = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
+    const loginStatus = document.getElementById("loginStatus");
+    const userInfo = document.getElementById("userInfo");
+    const btnLogout = document.getElementById("btnLogout");
 
     const form = document.getElementById("formInstalacion");
     const statusEl = document.getElementById("status");
     const btnLimpiar = document.getElementById("btnLimpiar");
 
-    // Helper para coger el valor o "Sin información"
+    // Mostrar / ocultar según sesión
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        loginCard.style.display = "none";
+        adminCard.style.display = "block";
+        userInfo.textContent = "Sesión iniciada como " + (user.email || "(usuario sin email)");
+      } else {
+        adminCard.style.display = "none";
+        loginCard.style.display = "block";
+        userInfo.textContent = "";
+      }
+    });
+
+    // Login con email/contraseña
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginStatus.textContent = "Iniciando sesión...";
+      loginStatus.classList.remove("error");
+
+      try {
+        const email = loginEmail.value.trim();
+        const pass = loginPassword.value;
+        await auth.signInWithEmailAndPassword(email, pass);
+        loginStatus.textContent = "";
+      } catch (error) {
+        console.error(error);
+        loginStatus.textContent = "Error al iniciar sesión: " + error.message;
+        loginStatus.classList.add("error");
+      }
+    });
+
+    // Logout
+    btnLogout.addEventListener("click", () => {
+      auth.signOut();
+    });
+
+    // Helpers de formulario instalación
     function valOrSinInfo(el) {
       const v = el.value.trim();
       return v === "" ? "Sin información" : v;
