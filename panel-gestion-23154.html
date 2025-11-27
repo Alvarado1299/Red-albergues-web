@@ -2,283 +2,218 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Panel administrador - Red de Albergues</title>
+  <title>ProyectoAAG · Admin instalaciones</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
       --bg: #0f172a;
-      --card: #111827;
-      --accent: #22c55e;
-      --accent-soft: #bbf7d0;
+      --card: #020617;
+      --border: #1f2937;
+      --primary: #22c55e;
+      --primary-soft: #052e16;
       --text: #e5e7eb;
       --muted: #9ca3af;
       --danger: #f97373;
-      --radius: 14px;
-      --shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background: radial-gradient(circle at top, #1e293b, #020617);
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617, #020617 40%, #0b1120 100%);
       color: var(--text);
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:1.5rem;
+      padding: 1.5rem;
     }
-    .shell{
-      width:100%;
-      max-width:1100px;
-      display:grid;
-      grid-template-columns: minmax(0,1.1fr) minmax(0,1.9fr);
-      gap:1.25rem;
+
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
     }
-    @media(max-width:900px){
-      .shell{grid-template-columns:1fr;align-items:flex-start}
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.4rem;
     }
-    .card{
-      background: radial-gradient(circle at top left,#1f2937,#020617);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:1.25rem 1.4rem;
-      position:relative;
-      overflow:hidden;
+
+    p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
     }
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background:radial-gradient(circle at top,#22c55e33,transparent 60%);
-      opacity:0.4;
-      pointer-events:none;
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 1rem 1.2rem;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
     }
-    h1{
-      font-size:1.5rem;
-      font-weight:700;
-      margin-bottom:0.4rem;
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1.2rem;
     }
-    h2{
-      font-size:1.05rem;
-      margin-bottom:0.6rem;
+
+    @media (max-width: 900px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
     }
-    p.desc{
-      color:var(--muted);
-      font-size:0.9rem;
-      margin-bottom:0.8rem;
-      max-width:28rem;
+
+    .section-title {
+      margin-top: 0.8rem;
+      margin-bottom: 0.3rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
     }
-    label{
-      font-size:0.8rem;
-      text-transform:uppercase;
-      letter-spacing:0.07em;
-      color:var(--muted);
-      margin-bottom:0.2rem;
-      display:block;
+
+    .field-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
     }
-    .input,.select,.textarea{
-      width:100%;
-      border-radius:12px;
-      border:1px solid #1f2937;
-      background:#020617;
-      color:var(--text);
-      padding:0.45rem 0.9rem;
-      font-size:0.9rem;
-      outline:none;
-      transition:border-color 0.15s,box-shadow 0.15s,background 0.15s;
+
+    .field {
+      margin-bottom: 0.5rem;
     }
-    .textarea{
-      resize:vertical;
-      min-height:60px;
-      border-radius:12px;
+
+    .input, .select, .textarea {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--text);
+      padding: 0.45rem 0.8rem;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .input:focus,.select:focus,.textarea:focus{
-      border-color:var(--accent);
-      box-shadow:0 0 0 1px #22c55e44;
-      background:#020617;
+
+    .textarea {
+      border-radius: 10px;
+      min-height: 70px;
+      resize: vertical;
+      padding: 0.5rem 0.7rem;
+      line-height: 1.4;
     }
-    .grid-2{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:0.6rem;
+
+    .input:focus, .select:focus, .textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-soft);
     }
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:0.45rem;
-      margin:0.4rem 0 0.3rem;
-      font-size:0.8rem;
+
+    .row {
+      display: flex;
+      gap: 0.6rem;
     }
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:0.4rem;
-      padding:0.3rem 0.7rem;
-      border-radius:999px;
-      background:#020617;
-      border:1px solid #1f2937;
-      cursor:pointer;
+
+    .row > div {
+      flex: 1;
     }
-    .chip input{accent-color:#22c55e}
-    .btn{
-      border:none;
-      border-radius:999px;
-      padding:0.55rem 1.2rem;
-      font-size:0.9rem;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:0.4rem;
-      font-weight:500;
-      transition:transform 0.1s,box-shadow 0.1s,background 0.1s;
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
     }
-    .btn-primary{
-      background:var(--accent);
-      color:#022c22;
-      box-shadow:0 12px 25px rgba(34,197,94,0.4);
+
+    .checkbox-group label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #020617;
+      cursor: pointer;
     }
-    .btn-primary:hover{
-      transform:translateY(-1px);
-      box-shadow:0 18px 35px rgba(34,197,94,0.5);
+
+    .checkbox-group input {
+      accent-color: var(--primary);
     }
-    .btn-ghost{
-      background:transparent;
-      color:var(--muted);
+
+    .btn-row {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
     }
-    .btn-ghost:hover{background:#020617}
-    .section-title{
-      font-size:0.75rem;
-      text-transform:uppercase;
-      letter-spacing:0.12em;
-      color:var(--muted);
-      margin-bottom:0.3rem;
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.45rem 1rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      white-space: nowrap;
     }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:0.35rem;
-      border-radius:999px;
-      padding:0.2rem 0.7rem;
-      background:#020617;
-      border:1px solid #1f2937;
-      font-size:0.75rem;
-      color:var(--muted);
-      margin-top:0.4rem;
+
+    .btn-primary {
+      background: var(--primary);
+      color: #022c22;
+      font-weight: 600;
     }
-    .pill-dot{
-      width:8px;
-      height:8px;
-      border-radius:999px;
-      background:#22c55e;
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
     }
-    .small{
-      font-size:0.8rem;
-      color:var(--muted);
+
+    .status {
+      margin-top: 0.7rem;
+      font-size: 0.8rem;
+      color: var(--muted);
     }
-    .error{
-      font-size:0.8rem;
-      color:var(--danger);
-      margin-top:0.3rem;
-      min-height:1.2rem;
+
+    .status.error {
+      color: var(--danger);
     }
-    .success{
-      font-size:0.8rem;
-      color:var(--accent-soft);
-      margin-top:0.3rem;
-      min-height:1.2rem;
+
+    .tag-list {
+      font-size: 0.8rem;
+      color: var(--muted);
     }
-    .badge-user{
-      font-size:0.8rem;
-      color:var(--muted);
-      display:flex;
-      align-items:center;
-      gap:0.4rem;
-      margin-bottom:0.6rem;
+
+    .small {
+      font-size: 0.78rem;
+      color: var(--muted);
     }
-    .badge-user span{
-      padding:0.15rem 0.6rem;
-      background:#020617;
-      border-radius:999px;
-      border:1px solid #1f2937;
-    }
-    .hidden{display:none !important;}
-    .mt{margin-top:0.6rem;}
   </style>
 </head>
 <body>
-  <div class="shell">
-    <!-- Columna izquierda: login / info -->
-    <section class="card">
-      <h1>Panel administrador</h1>
-      <p class="desc">
-        Acceso privado para registrar y actualizar albergues, campamentos e instalaciones
-        de la red. Usa tu correo y contraseña de administrador.
-      </p>
+  <div class="app">
+    <h1>Admin ProyectoAAG</h1>
+    <p>Formulario interno para añadir instalaciones a la base <strong>instalaciones</strong> de Firestore. No compartas esta URL.</p>
 
-      <div id="loginBox">
-        <label for="loginEmail">Correo</label>
-        <input id="loginEmail" class="input" type="email" placeholder="tucorreo@ejemplo.org" />
-
-        <label for="loginPassword" class="mt">Contraseña</label>
-        <input id="loginPassword" class="input" type="password" placeholder="••••••••" />
-
-        <div style="margin-top:0.8rem;display:flex;gap:0.6rem;align-items:center;">
-          <button id="btnLogin" class="btn btn-primary">Entrar</button>
-        </div>
-        <div id="loginError" class="error"></div>
-        <p class="small">
-          Si olvidaste la contraseña, cámbiala desde la consola de Firebase (Authentication).
-        </p>
-      </div>
-
-      <div id="loggedBox" class="hidden">
-        <div class="badge-user">
-          Sesión iniciada como <span id="userEmail"></span>
-        </div>
-        <button id="btnLogout" class="btn btn-ghost">Cerrar sesión</button>
-        <p class="small" style="margin-top:0.5rem;">
-          Mientras tengas la sesión abierta, puedes registrar nuevas instalaciones usando el formulario de la derecha.
-        </p>
-      </div>
-
-      <div style="margin-top:1.2rem;">
-        <div class="section-title">Estado</div>
-        <div class="pill">
-          <div class="pill-dot"></div>
-          <span id="estadoConexion">Conectando con Firebase…</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Columna derecha: formulario de instalación -->
-    <section class="card">
-      <h2>Registrar nueva instalación</h2>
-      <p class="desc">
-        Completa la información que conozcas. Los campos vacíos se guardarán como
-        <strong>"Sin información"</strong>. Cuantos más datos, mejor podrán elegir otros grupos.
-      </p>
-
+    <div class="card">
       <form id="formInstalacion">
-        <div class="mt">
-          <label for="nombre">Nombre de la instalación</label>
-          <input id="nombre" class="input" type="text" placeholder="Albergue / casa / campamento…" required />
+        <!-- =====================
+             IDENTIFICACIÓN BÁSICA
+             ===================== -->
+        <div class="section-title">Identificación</div>
+
+        <div class="field">
+          <div class="field-label">Nombre de la instalación *</div>
+          <input id="nombre" class="input" type="text" required placeholder="Ej: Albergue Santa María del Valle" />
         </div>
 
-        <div class="grid-2 mt">
-          <div>
-            <label for="tipo">Tipo</label>
-            <select id="tipo" class="select">
-              <option value="Albergue">Albergue</option>
-              <option value="Campamento">Campamento</option>
-              <option value="Casa rural">Casa rural</option>
-              <option value="Residencia">Residencia</option>
-              <option value="Otro">Otro</option>
-            </select>
-          </div>
-          <div>
-            <label for="comunidad">Comunidad</label>
+        <div class="row">
+          <div class="field">
+            <div class="field-label">Comunidad autónoma</div>
             <select id="comunidad" class="select">
-              <option value="Sin información">Sin información</option>
+              <option value="">Sin especificar</option>
               <option value="Andalucía">Andalucía</option>
               <option value="Aragón">Aragón</option>
               <option value="Asturias">Asturias</option>
@@ -300,35 +235,39 @@
               <option value="Melilla">Melilla</option>
             </select>
           </div>
-        </div>
-
-        <div class="grid-2 mt">
-          <div>
-            <label for="provincia">Provincia</label>
-            <input id="provincia" class="input" type="text" placeholder="Asturias, León…" />
-          </div>
-          <div>
-            <label for="municipio">Municipio / pueblo</label>
-            <input id="municipio" class="input" type="text" placeholder="Oviedo, Cistierna…" />
+          <div class="field">
+            <div class="field-label">Provincia</div>
+            <input id="provincia" class="input" type="text" placeholder="Ej: León" />
           </div>
         </div>
 
-        <div class="grid-2 mt">
-          <div>
-            <label for="plazasMin">Plazas mínimas</label>
-            <input id="plazasMin" class="input" type="number" min="0" placeholder="Ej: 30" />
+        <div class="row">
+          <div class="field">
+            <div class="field-label">Municipio / pueblo</div>
+            <input id="municipio" class="input" type="text" placeholder="Ej: Cistierna" />
           </div>
-          <div>
-            <label for="plazasMax">Plazas máximas</label>
-            <input id="plazasMax" class="input" type="number" min="0" placeholder="Ej: 80" />
+          <div class="field">
+            <div class="field-label">Dirección (si se conoce)</div>
+            <input id="direccion" class="input" type="text" placeholder="Calle, km, parroquia..." />
           </div>
         </div>
 
-        <div class="grid-2 mt">
-          <div>
-            <label for="entorno">Entorno</label>
+        <div class="row">
+          <div class="field">
+            <div class="field-label">Tipo</div>
+            <select id="tipo" class="select">
+              <option value="">Sin especificar</option>
+              <option value="Albergue">Albergue</option>
+              <option value="Campamento">Campamento</option>
+              <option value="Casa rural">Casa rural</option>
+              <option value="Residencia">Residencia</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label">Entorno</div>
             <select id="entorno" class="select">
-              <option value="Sin información">Sin información</option>
+              <option value="">Sin especificar</option>
               <option value="Montaña">Montaña</option>
               <option value="Playa">Playa</option>
               <option value="Rural">Rural</option>
@@ -336,10 +275,13 @@
               <option value="Otro">Otro</option>
             </select>
           </div>
-          <div>
-            <label for="usoPrincipal">Uso principal</label>
-            <select id="usoPrincipal" class="select">
-              <option value="Sin información">Sin información</option>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <div class="field-label">Uso principal</div>
+            <select id="uso_principal" class="select">
+              <option value="">Sin especificar</option>
               <option value="Campamento de verano">Campamento de verano</option>
               <option value="Convivencia fin de semana">Convivencia fin de semana</option>
               <option value="Retiro / espiritualidad">Retiro / espiritualidad</option>
@@ -347,13 +289,10 @@
               <option value="Multiuso">Multiuso</option>
             </select>
           </div>
-        </div>
-
-        <div class="grid-2 mt">
-          <div>
-            <label for="regimen">Régimen</label>
+          <div class="field">
+            <div class="field-label">Régimen</div>
             <select id="regimen" class="select">
-              <option value="Sin información">Sin información</option>
+              <option value="">Sin especificar</option>
               <option value="PC">Pensión completa</option>
               <option value="MP">Media pensión</option>
               <option value="SA">Solo alojamiento</option>
@@ -361,125 +300,157 @@
               <option value="Otro">Otro</option>
             </select>
           </div>
-          <div>
-            <label for="valoracion">Valoración interna (1-5)</label>
-            <input id="valoracion" class="input" type="number" min="1" max="5" placeholder="Opcional" />
+        </div>
+
+        <!-- =====================
+             CONTACTO
+             ===================== -->
+        <div class="section-title">Contacto</div>
+        <div class="row">
+          <div class="field">
+            <div class="field-label">Teléfono</div>
+            <input id="telefono" class="input" type="text" placeholder="Ej: 600 123 456" />
+          </div>
+          <div class="field">
+            <div class="field-label">Email de contacto</div>
+            <input id="email_contacto" class="input" type="email" placeholder="Ej: reservas@albergue.com" />
           </div>
         </div>
 
-        <div class="grid-2 mt">
-          <div>
-            <label for="habitaciones">Habitaciones (resumen)</label>
-            <input id="habitaciones" class="input" type="text" placeholder="Ej: 8 hab. de 6 plazas" />
+        <div class="field">
+          <div class="field-label">Web oficial (si tiene)</div>
+          <input id="web_oficial" class="input" type="url" placeholder="https://..." />
+        </div>
+
+        <!-- =====================
+             CAPACIDAD / INSTALACIÓN
+             ===================== -->
+        <div class="section-title">Capacidad y estancias</div>
+        <div class="row">
+          <div class="field">
+            <div class="field-label">Plazas mínimas recomendadas</div>
+            <input id="plazas_min" class="input" type="number" min="0" placeholder="Ej: 40" />
           </div>
-          <div>
-            <label for="banos">Baños (resumen)</label>
-            <input id="banos" class="input" type="text" placeholder="Ej: baños por planta, separados" />
+          <div class="field">
+            <div class="field-label">Plazas máximas aproximadas</div>
+            <input id="plazas_max" class="input" type="number" min="0" placeholder="Ej: 120" />
           </div>
         </div>
 
-        <div class="grid-2 mt">
-          <div>
-            <label for="distSuper">Distancia a supermercado</label>
-            <input id="distSuper" class="input" type="text" placeholder="Ej: 10 min en coche" />
+        <div class="row">
+          <div class="field">
+            <div class="field-label">Nº de habitaciones / salas de dormir</div>
+            <input id="habitaciones" class="input" type="text" placeholder="Ej: 10 habitaciones de 8" />
           </div>
-          <div>
-            <label for="distCentroMed">Distancia a centro médico</label>
-            <input id="distCentroMed" class="input" type="text" placeholder="Ej: 20 min en coche" />
-          </div>
-        </div>
-
-        <div class="mt">
-          <div class="section-title">Instalaciones y servicios</div>
-          <div class="chips">
-            <label class="chip"><input id="chkPiscina" type="checkbox" /> <span>Piscina</span></label>
-            <label class="chip"><input id="chkAccesible" type="checkbox" /> <span>Accesible</span></label>
-            <label class="chip"><input id="chkAlquilerExcl" type="checkbox" /> <span>Alquiler exclusivo</span></label>
-            <label class="chip"><input id="chkCampoDep" type="checkbox" /> <span>Campo deportivo</span></label>
-            <label class="chip"><input id="chkCocinaPropia" type="checkbox" /> <span>Cocina propia</span></label>
-            <label class="chip"><input id="chkCocinaInd" type="checkbox" /> <span>Cocina industrial</span></label>
-            <label class="chip"><input id="chkSalaMulti" type="checkbox" /> <span>Sala multiusos</span></label>
-            <label class="chip"><input id="chkZonaExt" type="checkbox" /> <span>Zona exterior grande</span></label>
-            <label class="chip"><input id="chkSombra" type="checkbox" /> <span>Sombra exterior</span></label>
-            <label class="chip"><input id="chkCalef" type="checkbox" /> <span>Calefacción</span></label>
-            <label class="chip"><input id="chkAire" type="checkbox" /> <span>Aire acondicionado</span></label>
+          <div class="field">
+            <div class="field-label">Baños / duchas</div>
+            <input id="banos" class="input" type="text" placeholder="Ej: 6 baños y 10 duchas" />
           </div>
         </div>
 
-        <div class="mt">
-          <div class="section-title">Acceso y logística</div>
-          <div class="chips">
-            <label class="chip"><input id="chkTranspPub" type="checkbox" /> <span>Transporte público</span></label>
-            <label class="chip"><input id="chkAccesoBus" type="checkbox" /> <span>Acceso bus</span></label>
-            <label class="chip"><input id="chkParking" type="checkbox" /> <span>Parking</span></label>
-            <label class="chip"><input id="chkVallado" type="checkbox" /> <span>Recinto vallado</span></label>
+        <!-- =====================
+             DISTANCIAS / SERVICIOS
+             ===================== -->
+        <div class="section-title">Servicios cercanos</div>
+        <div class="row">
+          <div class="field">
+            <div class="field-label">Distancia a supermercado</div>
+            <input id="distancia_supermercado" class="input" type="text" placeholder="Ej: 5 km en coche" />
+          </div>
+          <div class="field">
+            <div class="field-label">Distancia a centro médico</div>
+            <input id="distancia_centro_medico" class="input" type="text" placeholder="Ej: 20 min en coche" />
           </div>
         </div>
 
-        <div class="mt">
-          <label for="restricciones">Restricciones / normas clave</label>
-          <input id="restricciones" class="input" type="text" placeholder="Ej: silencio a las 23h, no fiestas…" />
+        <!-- =====================
+             NORMAS / SEGURIDAD
+             ===================== -->
+        <div class="section-title">Normas y seguridad</div>
+        <div class="field">
+          <div class="field-label">Restricciones / normas relevantes</div>
+          <textarea id="restricciones" class="textarea" placeholder="Ej: Silencio a partir de las 23:00, no se puede usar piscina por la noche..."></textarea>
         </div>
 
-        <div class="grid-2 mt">
-          <div>
-            <label for="horariosSilencio">Horarios de silencio</label>
-            <input id="horariosSilencio" class="input" type="text" placeholder="Ej: 23:00–08:00" />
+        <div class="row">
+          <div class="field">
+            <div class="field-label">Horarios de silencio</div>
+            <input id="horarios_silencio" class="input" type="text" placeholder="Ej: 23:00–8:00" />
           </div>
-          <div>
-            <label for="riesgos">Riesgos cercanos</label>
-            <input id="riesgos" class="input" type="text" placeholder="Ej: río cercano, carretera…" />
-          </div>
-        </div>
-
-        <div class="grid-2 mt">
-          <div>
-            <label for="limiteGrupos">Límite de grupo / observaciones</label>
-            <input id="limiteGrupos" class="input" type="text" placeholder="Ej: máximo 80 personas reales" />
-          </div>
-          <div>
-            <label for="telContacto">Teléfono contacto (interno)</label>
-            <input id="telContacto" class="input" type="text" placeholder="No se mostrará en la web" />
+          <div class="field">
+            <div class="field-label">Límite de tamaño de grupo</div>
+            <input id="limite_grupos" class="input" type="text" placeholder="Ej: Máx. 80 personas por grupo" />
           </div>
         </div>
 
-        <div class="grid-2 mt">
-          <div>
-            <label for="emailContacto">Email contacto (interno)</label>
-            <input id="emailContacto" class="input" type="email" placeholder="No se mostrará en la web" />
+        <div class="field">
+          <div class="field-label">Riesgos cercanos</div>
+          <textarea id="riesgos_cercanos" class="textarea" placeholder="Río cercano, carretera, barranco, etc."></textarea>
+        </div>
+
+        <!-- =====================
+             CARACTERÍSTICAS
+             ===================== -->
+        <div class="section-title">Características de la instalación</div>
+        <div class="checkbox-group">
+          <label><input id="piscina" type="checkbox" />Piscina</label>
+          <label><input id="tiene_campo_deportivo" type="checkbox" />Campo deportivo</label>
+          <label><input id="zona_exterior_grande" type="checkbox" />Zona exterior grande</label>
+          <label><input id="sombra_exterior" type="checkbox" />Zona con sombra</label>
+          <label><input id="cocina_industrial" type="checkbox" />Cocina industrial</label>
+          <label><input id="cocina_propia" type="checkbox" />Cocina propia</label>
+          <label><input id="sala_multiusos" type="checkbox" />Sala multiusos</label>
+          <label><input id="transporte_publico" type="checkbox" />Transporte público cercano</label>
+          <label><input id="acceso_bus" type="checkbox" />Acceso bus grande</label>
+          <label><input id="parking" type="checkbox" />Parking</label>
+          <label><input id="accesible" type="checkbox" />Accesible</label>
+          <label><input id="alquiler_exclusivo" type="checkbox" />Alquiler exclusivo</label>
+          <label><input id="calefaccion" type="checkbox" />Calefacción</label>
+          <label><input id="aire_acondicionado" type="checkbox" />Aire acondicionado</label>
+          <label><input id="vallado" type="checkbox" />Recinto vallado</label>
+          <!-- NUEVOS -->
+          <label><input id="zona_tiendas_campana" type="checkbox" />Zona para montar tiendas</label>
+          <label><input id="espacio_intendencia" type="checkbox" />Espacio intendencia / botiquín</label>
+        </div>
+
+        <!-- =====================
+             NOTAS / VALORACIÓN
+             ===================== -->
+        <div class="section-title">Notas internas / valoración</div>
+        <div class="field">
+          <div class="field-label">Notas públicas (lo que verán los demás)</div>
+          <textarea id="notas_publicas" class="textarea" placeholder="Ej: Muy buen trato, perfecto para grupos de 50–70, recomendable para monitores novatos..."></textarea>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <div class="field-label">Valoración interna (1–5)</div>
+            <input id="valoracion_interna" class="input" type="number" min="0" max="5" step="1" placeholder="Ej: 4" />
           </div>
-          <div>
-            <label for="webOficial">Web oficial</label>
-            <input id="webOficial" class="input" type="text" placeholder="URL de la instalación" />
-          </div>
         </div>
 
-        <div class="mt">
-          <label for="notasPublicas">Notas públicas (se mostrarán en la web)</label>
-          <textarea id="notasPublicas" class="textarea" placeholder="Resumen breve para orientar a otros grupos…"></textarea>
-        </div>
-
-        <div class="mt">
-          <label for="notas">Notas internas (solo para la organización)</label>
-          <textarea id="notas" class="textarea" placeholder="Comida, trato, detalles logísticos, contacto real…"></textarea>
-        </div>
-
-        <div style="margin-top:1rem;display:flex;gap:0.7rem;align-items:center;">
+        <div class="section-title">Acciones</div>
+        <div class="btn-row">
           <button type="submit" class="btn btn-primary">Guardar instalación</button>
-          <button type="reset" class="btn btn-ghost">Limpiar formulario</button>
+          <button type="button" id="btnLimpiar" class="btn btn-secondary">Limpiar formulario</button>
         </div>
-        <div id="formError" class="error"></div>
-        <div id="formOk" class="success"></div>
+
+        <div id="status" class="status"></div>
+
+        <div class="section-title">Recordatorio</div>
+        <div class="tag-list">
+          Campos que no se conozcan: déjalos vacíos, el sistema los tratará como “Sin información”.
+        </div>
       </form>
-    </section>
+    </div>
   </div>
 
   <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
   <script>
+    // MISMA CONFIG QUE EN LA WEB PÚBLICA
     const firebaseConfig = {
       apiKey: "AIzaSyD_qFTqRsPwHTO9P8nyfikyWSAV1kt7k90",
       authDomain: "red-albergues.firebaseapp.com",
@@ -492,190 +463,97 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    const auth = firebase.auth();
 
-    const estadoConexionEl = document.getElementById("estadoConexion");
-    estadoConexionEl.textContent = "Conectado a Firebase";
+    const form = document.getElementById("formInstalacion");
+    const statusEl = document.getElementById("status");
+    const btnLimpiar = document.getElementById("btnLimpiar");
 
-    const loginBox = document.getElementById("loginBox");
-    const loggedBox = document.getElementById("loggedBox");
-    const loginEmailEl = document.getElementById("loginEmail");
-    const loginPasswordEl = document.getElementById("loginPassword");
-    const loginErrorEl = document.getElementById("loginError");
-    const userEmailEl = document.getElementById("userEmail");
-    const btnLogin = document.getElementById("btnLogin");
-    const btnLogout = document.getElementById("btnLogout");
-
-    const formInst = document.getElementById("formInstalacion");
-    const formErrorEl = document.getElementById("formError");
-    const formOkEl = document.getElementById("formOk");
-
-    const nombreEl = document.getElementById("nombre");
-    const tipoEl = document.getElementById("tipo");
-    const comunidadEl = document.getElementById("comunidad");
-    const provinciaEl = document.getElementById("provincia");
-    const municipioEl = document.getElementById("municipio");
-    const plazasMinEl = document.getElementById("plazasMin");
-    const plazasMaxEl = document.getElementById("plazasMax");
-    const entornoEl = document.getElementById("entorno");
-    const usoPrincipalEl = document.getElementById("usoPrincipal");
-    const regimenEl = document.getElementById("regimen");
-    const valoracionEl = document.getElementById("valoracion");
-    const habitacionesEl = document.getElementById("habitaciones");
-    const banosEl = document.getElementById("banos");
-    const distSuperEl = document.getElementById("distSuper");
-    const distCentroMedEl = document.getElementById("distCentroMed");
-
-    const chkPiscinaEl = document.getElementById("chkPiscina");
-    const chkAccesibleEl = document.getElementById("chkAccesible");
-    const chkAlquilerExclEl = document.getElementById("chkAlquilerExcl");
-    const chkCampoDepEl = document.getElementById("chkCampoDep");
-    const chkCocinaPropiaEl = document.getElementById("chkCocinaPropia");
-    const chkCocinaIndEl = document.getElementById("chkCocinaInd");
-    const chkSalaMultiEl = document.getElementById("chkSalaMulti");
-    const chkZonaExtEl = document.getElementById("chkZonaExt");
-    const chkSombraEl = document.getElementById("chkSombra");
-    const chkCalefEl = document.getElementById("chkCalef");
-    const chkAireEl = document.getElementById("chkAire");
-
-    const chkTranspPubEl = document.getElementById("chkTranspPub");
-    const chkAccesoBusEl = document.getElementById("chkAccesoBus");
-    const chkParkingEl = document.getElementById("chkParking");
-    const chkValladoEl = document.getElementById("chkVallado");
-
-    const restriccionesEl = document.getElementById("restricciones");
-    const horariosSilencioEl = document.getElementById("horariosSilencio");
-    const riesgosEl = document.getElementById("riesgos");
-    const limiteGruposEl = document.getElementById("limiteGrupos");
-
-    const telContactoEl = document.getElementById("telContacto");
-    const emailContactoEl = document.getElementById("emailContacto");
-    const webOficialEl = document.getElementById("webOficial");
-
-    const notasPublicasEl = document.getElementById("notasPublicas");
-    const notasEl = document.getElementById("notas");
-
-    function normalizarTexto(v) {
-      const t = (v || "").toString().trim();
-      return t === "" ? "Sin información" : t;
+    // Helper para coger el valor o "Sin información"
+    function valOrSinInfo(el) {
+      const v = el.value.trim();
+      return v === "" ? "Sin información" : v;
     }
 
-    function normalizarNumero(v) {
-      const n = parseInt(v, 10);
-      return isNaN(n) ? null : n;
+    function limpiarFormulario() {
+      form.reset();
+      statusEl.textContent = "";
+      statusEl.classList.remove("error");
     }
 
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        loginBox.classList.add("hidden");
-        loggedBox.classList.remove("hidden");
-        userEmailEl.textContent = user.email;
-        formInst.querySelector("button[type='submit']").disabled = false;
-        formErrorEl.textContent = "";
-      } else {
-        loginBox.classList.remove("hidden");
-        loggedBox.classList.add("hidden");
-        userEmailEl.textContent = "";
-        formInst.querySelector("button[type='submit']").disabled = true;
-        formErrorEl.textContent = "Inicia sesión para poder guardar instalaciones.";
-      }
-    });
+    btnLimpiar.addEventListener("click", limpiarFormulario);
 
-    btnLogin.addEventListener("click", async () => {
-      loginErrorEl.textContent = "";
-      try {
-        const email = loginEmailEl.value.trim();
-        const pass = loginPasswordEl.value;
-        if (!email || !pass) {
-          loginErrorEl.textContent = "Introduce correo y contraseña.";
-          return;
-        }
-        await auth.signInWithEmailAndPassword(email, pass);
-      } catch (err) {
-        console.error(err);
-        if (err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
-          loginErrorEl.textContent = "Correo o contraseña incorrectos.";
-        } else {
-          loginErrorEl.textContent = "Error al iniciar sesión. Inténtalo de nuevo.";
-        }
-      }
-    });
-
-    btnLogout.addEventListener("click", async () => {
-      await auth.signOut();
-    });
-
-    formInst.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      formErrorEl.textContent = "";
-      formOkEl.textContent = "";
-
-      const user = auth.currentUser;
-      if (!user) {
-        formErrorEl.textContent = "Debes iniciar sesión para guardar.";
-        return;
-      }
-
-      const datos = {
-        nombre: normalizarTexto(nombreEl.value),
-        tipo: normalizarTexto(tipoEl.value),
-        comunidad: normalizarTexto(comunidadEl.value),
-        provincia: normalizarTexto(provinciaEl.value),
-        municipio: normalizarTexto(municipioEl.value),
-        plazas_min: normalizarNumero(plazasMinEl.value),
-        plazas_max: normalizarNumero(plazasMaxEl.value),
-
-        entorno: normalizarTexto(entornoEl.value),
-        uso_principal: normalizarTexto(usoPrincipalEl.value),
-        regimen: normalizarTexto(regimenEl.value),
-
-        habitaciones: normalizarTexto(habitacionesEl.value),
-        banos: normalizarTexto(banosEl.value),
-        distancia_supermercado: normalizarTexto(distSuperEl.value),
-        distancia_centro_medico: normalizarTexto(distCentroMedEl.value),
-
-        piscina: !!chkPiscinaEl.checked,
-        accesible: !!chkAccesibleEl.checked,
-        alquiler_exclusivo: !!chkAlquilerExclEl.checked,
-        tiene_campo_deportivo: !!chkCampoDepEl.checked,
-        cocina_propia: !!chkCocinaPropiaEl.checked,
-        cocina_industrial: !!chkCocinaIndEl.checked,
-        sala_multiusos: !!chkSalaMultiEl.checked,
-        zona_exterior_grande: !!chkZonaExtEl.checked,
-        sombra_exterior: !!chkSombraEl.checked,
-        calefaccion: !!chkCalefEl.checked,
-        aire_acondicionado: !!chkAireEl.checked,
-
-        transporte_publico: !!chkTranspPubEl.checked,
-        acceso_bus: !!chkAccesoBusEl.checked,
-        parking: !!chkParkingEl.checked,
-        vallado: !!chkValladoEl.checked,
-
-        restricciones: normalizarTexto(restriccionesEl.value),
-        horarios_silencio: normalizarTexto(horariosSilencioEl.value),
-        riesgos_cercanos: normalizarTexto(riesgosEl.value),
-        limite_grupos: normalizarTexto(limiteGruposEl.value),
-
-        tel_contacto: normalizarTexto(telContactoEl.value),
-        email_contacto: normalizarTexto(emailContactoEl.value),
-        web_oficial: normalizarTexto(webOficialEl.value),
-
-        valoracion_interna: normalizarNumero(valoracionEl.value),
-        notas_publicas: normalizarTexto(notasPublicasEl.value),
-        notas_internas: normalizarTexto(notasEl.value),
-
-        creado_por: user.email || "desconocido",
-        creado_en: firebase.firestore.FieldValue.serverTimestamp(),
-        ultima_actualizacion: firebase.firestore.FieldValue.serverTimestamp()
-      };
+      statusEl.textContent = "Guardando...";
+      statusEl.classList.remove("error");
 
       try {
-        await db.collection("instalaciones").add(datos);
-        formOkEl.textContent = "Instalación guardada correctamente.";
-        formInst.reset();
+        const ahora = firebase.firestore.FieldValue.serverTimestamp();
+
+        const data = {
+          nombre: document.getElementById("nombre").value.trim() || "Instalación sin nombre",
+          comunidad: valOrSinInfo(document.getElementById("comunidad")),
+          provincia: valOrSinInfo(document.getElementById("provincia")),
+          municipio: valOrSinInfo(document.getElementById("municipio")),
+          direccion: valOrSinInfo(document.getElementById("direccion")),
+          tipo: valOrSinInfo(document.getElementById("tipo")),
+          entorno: valOrSinInfo(document.getElementById("entorno")),
+          uso_principal: valOrSinInfo(document.getElementById("uso_principal")),
+          regimen: valOrSinInfo(document.getElementById("regimen")),
+
+          telefono: valOrSinInfo(document.getElementById("telefono")),
+          email_contacto: valOrSinInfo(document.getElementById("email_contacto")),
+          web_oficial: valOrSinInfo(document.getElementById("web_oficial")),
+
+          plazas_min: document.getElementById("plazas_min").value ? Number(document.getElementById("plazas_min").value) : null,
+          plazas_max: document.getElementById("plazas_max").value ? Number(document.getElementById("plazas_max").value) : null,
+          habitaciones: valOrSinInfo(document.getElementById("habitaciones")),
+          banos: valOrSinInfo(document.getElementById("banos")),
+
+          distancia_supermercado: valOrSinInfo(document.getElementById("distancia_supermercado")),
+          distancia_centro_medico: valOrSinInfo(document.getElementById("distancia_centro_medico")),
+
+          restricciones: valOrSinInfo(document.getElementById("restricciones")),
+          horarios_silencio: valOrSinInfo(document.getElementById("horarios_silencio")),
+          limite_grupos: valOrSinInfo(document.getElementById("limite_grupos")),
+          riesgos_cercanos: valOrSinInfo(document.getElementById("riesgos_cercanos")),
+
+          piscina: document.getElementById("piscina").checked,
+          tiene_campo_deportivo: document.getElementById("tiene_campo_deportivo").checked,
+          zona_exterior_grande: document.getElementById("zona_exterior_grande").checked,
+          sombra_exterior: document.getElementById("sombra_exterior").checked,
+          cocina_industrial: document.getElementById("cocina_industrial").checked,
+          cocina_propia: document.getElementById("cocina_propia").checked,
+          sala_multiusos: document.getElementById("sala_multiusos").checked,
+          transporte_publico: document.getElementById("transporte_publico").checked,
+          acceso_bus: document.getElementById("acceso_bus").checked,
+          parking: document.getElementById("parking").checked,
+          accesible: document.getElementById("accesible").checked,
+          alquiler_exclusivo: document.getElementById("alquiler_exclusivo").checked,
+          calefaccion: document.getElementById("calefaccion").checked,
+          aire_acondicionado: document.getElementById("aire_acondicionado").checked,
+          vallado: document.getElementById("vallado").checked,
+
+          zona_tiendas_campana: document.getElementById("zona_tiendas_campana").checked,
+          espacio_intendencia: document.getElementById("espacio_intendencia").checked,
+
+          notas_publicas: valOrSinInfo(document.getElementById("notas_publicas")),
+          valoracion_interna: document.getElementById("valoracion_interna").value
+            ? Number(document.getElementById("valoracion_interna").value)
+            : null,
+
+          creado_en: ahora,
+          ultima_actualizacion: ahora
+        };
+
+        await db.collection("instalaciones").add(data);
+
+        statusEl.textContent = "Instalación guardada correctamente.";
+        limpiarFormulario();
       } catch (err) {
         console.error(err);
-        formErrorEl.textContent = "Error al guardar. Revisa la conexión e inténtalo de nuevo.";
+        statusEl.textContent = "Error al guardar la instalación.";
+        statusEl.classList.add("error");
       }
     });
   </script>
