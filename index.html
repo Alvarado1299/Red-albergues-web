@@ -23,7 +23,6 @@
       --alert-text: #854d0e;
     }
 
-    /* Modo oscuro: sobreescribe variables */
     .dark {
       --color-bg: #020617;
       --color-bg-gradient1: #020617;
@@ -62,7 +61,6 @@
       margin: 0 auto;
     }
 
-    /* Botón modo oscuro */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -126,19 +124,83 @@
       border: 1px solid var(--alert-border);
     }
 
+    /* Filtros */
+
+    .filters-wrapper {
+      position: sticky;
+      top: 0.75rem;
+      z-index: 20;
+      margin-bottom: 1.5rem;
+    }
+
     .filters-card {
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(10px);
       border-radius: 16px;
       box-shadow: var(--shadow-soft);
-      padding: 1rem 1.25rem;
-      margin-bottom: 1.5rem;
       border: 1px solid var(--color-border-soft);
-      transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s;
+      overflow: hidden;
     }
 
     .dark .filters-card {
       background: rgba(15, 23, 42, 0.94);
+    }
+
+    .filters-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0.9rem;
+      cursor: pointer;
+    }
+
+    .filters-header-bar-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .filters-header-bar-sub {
+      font-size: 0.75rem;
+      color: var(--color-muted);
+    }
+
+    .filters-header-left {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filters-header-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--color-border-soft);
+      padding: 0.25rem 0.7rem;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--color-muted);
+      background: rgba(15, 23, 42, 0.02);
+    }
+
+    .filters-body {
+      padding: 0.9rem 1.25rem 1rem 1.25rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .filters-card.collapsed .filters-body {
+      display: none;
+    }
+
+    .filters-card.collapsed {
+      transform: translateY(-4px);
+    }
+
+    .filters-card.collapsed .filters-header-bar-sub {
+      display: none;
+    }
+
+    .filters-card.collapsed .filters-header-toggle-icon {
+      transform: rotate(180deg);
     }
 
     .filters-grid {
@@ -180,7 +242,8 @@
       margin-bottom: 0.15rem;
     }
 
-    .input, .select {
+    .input,
+    .select {
       width: 100%;
       border-radius: 999px;
       border: 1px solid var(--color-border-soft);
@@ -199,7 +262,8 @@
       color: var(--color-text);
     }
 
-    .input:focus, .select:focus {
+    .input:focus,
+    .select:focus {
       border-color: var(--color-primary);
       box-shadow: 0 0 0 2px var(--color-primary-soft);
       background: #ffffff;
@@ -311,6 +375,16 @@
       background: #111827;
     }
 
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--color-border-soft);
+      color: var(--color-muted);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(148, 163, 184, 0.15);
+    }
+
     .results-header {
       display: flex;
       justify-content: space-between;
@@ -325,23 +399,40 @@
       color: var(--color-muted);
     }
 
-    .results-shell {
-      display: grid;
-      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.3fr);
-      gap: 1rem;
-      align-items: flex-start;
+    .view-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
     }
 
-    @media (max-width: 900px) {
-      .results-shell {
-        grid-template-columns: 1fr;
-      }
+    .view-toggle-button {
+      border-radius: 999px;
+      padding: 0.25rem 0.6rem;
+      border: 1px solid var(--color-border-soft);
+      background: rgba(15, 23, 42, 0.02);
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: var(--color-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .view-toggle-button.active {
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+      border-color: var(--color-primary);
     }
 
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1rem;
+    }
+
+    .cards-grid.list-view {
+      grid-template-columns: 1fr;
     }
 
     .card {
@@ -477,29 +568,33 @@
       font-size: 0.9rem;
     }
 
-    /* Panel de detalle lateral */
-    .detail-panel {
-      position: relative;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(20px);
-      transition: opacity 0.2s ease, transform 0.2s ease;
+    /* MODAL DETALLE */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 50;
     }
 
-    .detail-panel.open {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(0);
+    .modal-overlay.open {
+      display: flex;
     }
 
-    .detail-card {
+    .modal-card {
       background: var(--color-card);
       border-radius: 18px;
       box-shadow: var(--shadow-soft);
-      padding: 1rem 1.1rem;
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      max-height: 80vh;
+      max-width: 720px;
+      width: 100%;
+      max-height: 86vh;
       overflow: auto;
+      padding: 1.1rem 1.2rem 1rem 1.2rem;
+      border: 1px solid rgba(148,163,184,0.35);
     }
 
     .detail-header {
@@ -532,23 +627,6 @@
       margin-top: 0.15rem;
     }
 
-    .detail-close {
-      border-radius: 999px;
-      border: 1px solid var(--color-border-soft);
-      padding: 0.2rem 0.7rem;
-      background: transparent;
-      color: var(--color-muted);
-      font-size: 0.78rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .detail-close:hover {
-      background: rgba(148, 163, 184, 0.15);
-    }
-
     .detail-tags {
       display: flex;
       flex-wrap: wrap;
@@ -567,21 +645,26 @@
       flex-wrap: wrap;
     }
 
-    @media (max-width: 900px) {
-      .detail-panel {
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.75);
-        padding: 1rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 40;
-      }
-      .detail-card {
-        max-height: 86vh;
-        width: 100%;
-        max-width: 600px;
+    .detail-close {
+      border-radius: 999px;
+      border: 1px solid var(--color-border-soft);
+      padding: 0.25rem 0.7rem;
+      background: transparent;
+      color: var(--color-muted);
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .detail-close:hover {
+      background: rgba(148, 163, 184, 0.15);
+    }
+
+    @media (max-width: 600px) {
+      .modal-card {
+        max-height: 90vh;
       }
     }
   </style>
@@ -606,146 +689,166 @@
       </div>
     </header>
 
-    <section class="filters-card">
-      <!-- Fila principal de filtros -->
-      <div class="filters-grid">
-        <div>
-          <div class="field-label">Buscar</div>
-          <input id="filtroTexto" class="input" type="text" placeholder="Nombre, pueblo, provincia, dirección, notas…" />
-        </div>
-        <div>
-          <div class="field-label">Comunidad</div>
-          <select id="filtroComunidad" class="select">
-            <option value="">Todas</option>
-            <option value="Andalucía">Andalucía</option>
-            <option value="Aragón">Aragón</option>
-            <option value="Asturias">Asturias</option>
-            <option value="Islas Baleares">Islas Baleares</option>
-            <option value="Canarias">Canarias</option>
-            <option value="Cantabria">Cantabria</option>
-            <option value="Castilla-La Mancha">Castilla-La Mancha</option>
-            <option value="Castilla y León">Castilla y León</option>
-            <option value="Cataluña">Cataluña</option>
-            <option value="Comunidad Valenciana">Comunidad Valenciana</option>
-            <option value="Extremadura">Extremadura</option>
-            <option value="Galicia">Galicia</option>
-            <option value="Comunidad de Madrid">Comunidad de Madrid</option>
-            <option value="Región de Murcia">Región de Murcia</option>
-            <option value="Navarra">Navarra</option>
-            <option value="País Vasco">País Vasco</option>
-            <option value="La Rioja">La Rioja</option>
-            <option value="Ceuta">Ceuta</option>
-            <option value="Melilla">Melilla</option>
-          </select>
-        </div>
-        <div>
-          <div class="field-label">Tipo</div>
-          <select id="filtroTipo" class="select">
-            <option value="">Todos</option>
-            <option value="Albergue">Albergue</option>
-            <option value="Campamento">Campamento</option>
-            <option value="Casa rural">Casa rural</option>
-            <option value="Residencia">Residencia</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-        <div>
-          <div class="field-label">Entorno</div>
-          <select id="filtroEntorno" class="select">
-            <option value="">Cualquiera</option>
-            <option value="Montaña">Montaña</option>
-            <option value="Playa">Playa</option>
-            <option value="Rural">Rural</option>
-            <option value="Urbano">Urbano</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Segunda fila de filtros -->
-      <div class="filters-grid-secondary">
-        <div>
-          <div class="field-label">Uso principal</div>
-          <select id="filtroUso" class="select">
-            <option value="">Cualquiera</option>
-            <option value="Campamento de verano">Campamento de verano</option>
-            <option value="Convivencia fin de semana">Convivencia fin de semana</option>
-            <option value="Retiro / espiritualidad">Retiro / espiritualidad</option>
-            <option value="Formación">Formación</option>
-            <option value="Multiuso">Multiuso</option>
-          </select>
-        </div>
-        <div>
-          <div class="field-label">Régimen</div>
-          <select id="filtroRegimen" class="select">
-            <option value="">Cualquiera</option>
-            <option value="PC">Pensión completa</option>
-            <option value="MP">Media pensión</option>
-            <option value="SA">Solo alojamiento</option>
-            <option value="Alquiler íntegro">Alquiler íntegro</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-        <div>
-          <div class="field-label">Plazas mínimas</div>
-          <input id="filtroPlazasMin" class="input" type="number" min="0" placeholder="Ej: 40" />
-        </div>
-        <div>
-          <div class="field-label">Plazas máximas</div>
-          <input id="filtroPlazasMax" class="input" type="number" min="0" placeholder="Ej: 120" />
-        </div>
-      </div>
-
-      <!-- Checkboxes de características -->
-      <div class="filters-bottom">
-        <div class="checkboxes">
-          <label><input id="filtroPiscina" type="checkbox" /><span>Piscina</span></label>
-          <label><input id="filtroAccesible" type="checkbox" /><span>Accesible</span></label>
-          <label><input id="filtroAlquilerExclusivo" type="checkbox" /><span>Alquiler exclusivo</span></label>
-          <label><input id="filtroCampoDeportivo" type="checkbox" /><span>Campo deportivo</span></label>
-          <label><input id="filtroCocinaIndustrial" type="checkbox" /><span>Cocina industrial</span></label>
-          <label><input id="filtroCocinaPropia" type="checkbox" /><span>Cocina propia</span></label>
-          <label><input id="filtroSalaMultiusos" type="checkbox" /><span>Sala multiusos</span></label>
-          <label><input id="filtroZonaExterior" type="checkbox" /><span>Zona exterior grande</span></label>
-          <label><input id="filtroSombra" type="checkbox" /><span>Sombra exterior</span></label>
-          <label><input id="filtroTransportePublico" type="checkbox" /><span>Transporte público</span></label>
-          <label><input id="filtroAccesoBus" type="checkbox" /><span>Acceso bus</span></label>
-          <label><input id="filtroParking" type="checkbox" /><span>Parking</span></label>
-          <label><input id="filtroCalefaccion" type="checkbox" /><span>Calefacción</span></label>
-          <label><input id="filtroAire" type="checkbox" /><span>Aire acondicionado</span></label>
-          <label><input id="filtroVallado" type="checkbox" /><span>Recinto vallado</span></label>
+    <!-- FILTROS STICKY Y COLAPSABLES -->
+    <div class="filters-wrapper">
+      <section id="filtersCard" class="filters-card">
+        <div id="filtersHeader" class="filters-header-bar">
+          <div class="filters-header-left">
+            <span class="filters-header-bar-title">Filtros de búsqueda</span>
+            <span class="filters-header-bar-sub">Pulsa para plegar o desplegar</span>
+          </div>
+          <button type="button" class="filters-header-toggle">
+            <span class="filters-header-toggle-icon">▲</span>
+            <span>Mostrar / ocultar</span>
+          </button>
         </div>
 
-        <div class="filters-actions">
-          <button id="btnLimpiar" class="btn btn-secondary" type="button">Limpiar filtros</button>
+        <div class="filters-body">
+          <!-- Fila principal de filtros -->
+          <div class="filters-grid">
+            <div>
+              <div class="field-label">Buscar</div>
+              <input id="filtroTexto" class="input" type="text" placeholder="Nombre, pueblo, provincia, dirección, notas…" />
+            </div>
+            <div>
+              <div class="field-label">Comunidad</div>
+              <select id="filtroComunidad" class="select">
+                <option value="">Todas</option>
+                <option value="Andalucía">Andalucía</option>
+                <option value="Aragón">Aragón</option>
+                <option value="Asturias">Asturias</option>
+                <option value="Islas Baleares">Islas Baleares</option>
+                <option value="Canarias">Canarias</option>
+                <option value="Cantabria">Cantabria</option>
+                <option value="Castilla-La Mancha">Castilla-La Mancha</option>
+                <option value="Castilla y León">Castilla y León</option>
+                <option value="Cataluña">Cataluña</option>
+                <option value="Comunidad Valenciana">Comunidad Valenciana</option>
+                <option value="Extremadura">Extremadura</option>
+                <option value="Galicia">Galicia</option>
+                <option value="Comunidad de Madrid">Comunidad de Madrid</option>
+                <option value="Región de Murcia">Región de Murcia</option>
+                <option value="Navarra">Navarra</option>
+                <option value="País Vasco">País Vasco</option>
+                <option value="La Rioja">La Rioja</option>
+                <option value="Ceuta">Ceuta</option>
+                <option value="Melilla">Melilla</option>
+              </select>
+            </div>
+            <div>
+              <div class="field-label">Tipo</div>
+              <select id="filtroTipo" class="select">
+                <option value="">Todos</option>
+                <option value="Albergue">Albergue</option>
+                <option value="Campamento">Campamento</option>
+                <option value="Casa rural">Casa rural</option>
+                <option value="Residencia">Residencia</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+            <div>
+              <div class="field-label">Entorno</div>
+              <select id="filtroEntorno" class="select">
+                <option value="">Cualquiera</option>
+                <option value="Montaña">Montaña</option>
+                <option value="Playa">Playa</option>
+                <option value="Rural">Rural</option>
+                <option value="Urbano">Urbano</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Segunda fila de filtros -->
+          <div class="filters-grid-secondary">
+            <div>
+              <div class="field-label">Uso principal</div>
+              <select id="filtroUso" class="select">
+                <option value="">Cualquiera</option>
+                <option value="Campamento de verano">Campamento de verano</option>
+                <option value="Convivencia fin de semana">Convivencia fin de semana</option>
+                <option value="Retiro / espiritualidad">Retiro / espiritualidad</option>
+                <option value="Formación">Formación</option>
+                <option value="Multiuso">Multiuso</option>
+              </select>
+            </div>
+            <div>
+              <div class="field-label">Régimen</div>
+              <select id="filtroRegimen" class="select">
+                <option value="">Cualquiera</option>
+                <option value="PC">Pensión completa</option>
+                <option value="MP">Media pensión</option>
+                <option value="SA">Solo alojamiento</option>
+                <option value="Alquiler íntegro">Alquiler íntegro</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+            <div>
+              <div class="field-label">Plazas mínimas</div>
+              <input id="filtroPlazasMin" class="input" type="number" min="0" placeholder="Ej: 40" />
+            </div>
+            <div>
+              <div class="field-label">Plazas máximas</div>
+              <input id="filtroPlazasMax" class="input" type="number" min="0" placeholder="Ej: 120" />
+            </div>
+          </div>
+
+          <!-- Checkboxes de características -->
+          <div class="filters-bottom">
+            <div class="checkboxes">
+              <label><input id="filtroPiscina" type="checkbox" /><span>Piscina</span></label>
+              <label><input id="filtroAccesible" type="checkbox" /><span>Accesible</span></label>
+              <label><input id="filtroAlquilerExclusivo" type="checkbox" /><span>Alquiler exclusivo</span></label>
+              <label><input id="filtroCampoDeportivo" type="checkbox" /><span>Campo deportivo</span></label>
+              <label><input id="filtroCocinaIndustrial" type="checkbox" /><span>Cocina industrial</span></label>
+              <label><input id="filtroCocinaPropia" type="checkbox" /><span>Cocina propia</span></label>
+              <label><input id="filtroSalaMultiusos" type="checkbox" /><span>Sala multiusos</span></label>
+              <label><input id="filtroZonaExterior" type="checkbox" /><span>Zona exterior grande</span></label>
+              <label><input id="filtroSombra" type="checkbox" /><span>Sombra exterior</span></label>
+              <label><input id="filtroTransportePublico" type="checkbox" /><span>Transporte público</span></label>
+              <label><input id="filtroAccesoBus" type="checkbox" /><span>Acceso bus</span></label>
+              <label><input id="filtroParking" type="checkbox" /><span>Parking</span></label>
+              <label><input id="filtroCalefaccion" type="checkbox" /><span>Calefacción</span></label>
+              <label><input id="filtroAire" type="checkbox" /><span>Aire acondicionado</span></label>
+              <label><input id="filtroVallado" type="checkbox" /><span>Recinto vallado</span></label>
+            </div>
+
+            <div class="filters-actions">
+              <button id="btnLimpiar" class="btn btn-secondary" type="button">Limpiar filtros</button>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
     <section class="results-header">
       <h2 style="font-size: 1rem;">Resultados</h2>
       <span id="contadorResultados">0 instalaciones encontradas</span>
+
+      <div class="view-toggle">
+        <button id="btnVistaTarjetas" type="button" class="view-toggle-button active">▢ Vista tarjetas</button>
+        <button id="btnVistaLista" type="button" class="view-toggle-button">☰ Vista lista</button>
+      </div>
     </section>
 
-    <div class="results-shell">
-      <section id="listaInstalaciones" class="cards-grid"></section>
-
-      <aside id="detailPanel" class="detail-panel">
-        <div id="detailContent" class="detail-card"></div>
-      </aside>
-    </div>
+    <section id="listaInstalaciones" class="cards-grid"></section>
 
     <div id="emptyState" class="empty-state" style="display:none;">
       No hay instalaciones que coincidan con los filtros actuales. Prueba a ajustar la búsqueda.
     </div>
   </div>
 
-  <!-- Firebase compat (app + Firestore) -->
+  <!-- MODAL DETALLE -->
+  <div id="detalleOverlay" class="modal-overlay">
+    <div id="detalleCard" class="modal-card"></div>
+  </div>
+
+  <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
-    // Configuración de Firebase
+    // Config Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyD_qFTqRsPwHTO9P8nyfikyWSAV1kt7k90",
       authDomain: "red-albergues.firebaseapp.com",
@@ -765,9 +868,6 @@
     const listaInstalacionesEl = document.getElementById("listaInstalaciones");
     const contadorResultadosEl = document.getElementById("contadorResultados");
     const emptyStateEl = document.getElementById("emptyState");
-
-    const detailPanelEl = document.getElementById("detailPanel");
-    const detailContentEl = document.getElementById("detailContent");
 
     const filtroTextoEl = document.getElementById("filtroTexto");
     const filtroComunidadEl = document.getElementById("filtroComunidad");
@@ -795,6 +895,15 @@
     const filtroValladoEl = document.getElementById("filtroVallado");
 
     const btnLimpiar = document.getElementById("btnLimpiar");
+
+    const filtersCard = document.getElementById("filtersCard");
+    const filtersHeader = document.getElementById("filtersHeader");
+
+    const btnVistaTarjetas = document.getElementById("btnVistaTarjetas");
+    const btnVistaLista = document.getElementById("btnVistaLista");
+
+    const modalOverlay = document.getElementById("detalleOverlay");
+    const modalCard = document.getElementById("detalleCard");
 
     // Modo oscuro
     const themeToggleBtn = document.getElementById("themeToggle");
@@ -830,10 +939,14 @@
       applyTheme(isDark ? "light" : "dark");
     });
 
+    // Colapsar filtros
+    filtersHeader.addEventListener("click", () => {
+      filtersCard.classList.toggle("collapsed");
+    });
+
     function formatearCapacidad(inst) {
       const min = inst.plazas_min ?? null;
       const max = inst.plazas_max ?? null;
-
       if (min && max) return `De ${min} a ${max} plazas`;
       if (max) return `Hasta ${max} plazas`;
       if (min) return `A partir de ${min} plazas`;
@@ -846,12 +959,33 @@
       return d.toLocaleDateString("es-ES", { year: "numeric", month: "short" });
     }
 
-    function cerrarDetalle() {
-      detailPanelEl.classList.remove("open");
-      detailContentEl.innerHTML = "";
+    // Vista tarjetas/lista
+    function setVista(lista) {
+      if (lista) {
+        listaInstalacionesEl.classList.add("list-view");
+        btnVistaLista.classList.add("active");
+        btnVistaTarjetas.classList.remove("active");
+      } else {
+        listaInstalacionesEl.classList.remove("list-view");
+        btnVistaTarjetas.classList.add("active");
+        btnVistaLista.classList.remove("active");
+      }
     }
 
-    function abrirDetalle(inst) {
+    btnVistaLista.addEventListener("click", () => setVista(true));
+    btnVistaTarjetas.addEventListener("click", () => setVista(false));
+
+    // Modal
+    function cerrarModal() {
+      modalOverlay.classList.remove("open");
+      modalCard.innerHTML = "";
+    }
+
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) cerrarModal();
+    });
+
+    function abrirModal(inst) {
       const comunidad = inst.comunidad || "Sin información";
       const provincia = inst.provincia || "Sin información";
       const municipio = inst.municipio || "Sin información";
@@ -879,19 +1013,14 @@
 
       const capacidadTexto = formatearCapacidad(inst);
 
-      detailContentEl.innerHTML = `
+      modalCard.innerHTML = `
         <div class="detail-header">
           <div>
             <div class="detail-title">${inst.nombre || "Instalación sin nombre"}</div>
             <div class="card-location">${municipio} · ${provincia} · ${comunidad}</div>
             ${direccion ? `<div class="card-location">📍 ${direccion}</div>` : ""}
           </div>
-          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.3rem;">
-            <span class="chip-tipo">${inst.tipo || "Sin información"}</span>
-            <button type="button" class="detail-close" id="btnCerrarDetalle">
-              ✕ Cerrar
-            </button>
-          </div>
+          <button type="button" class="detail-close" id="btnCerrarModal">✕ Cerrar</button>
         </div>
 
         <div class="detail-tags">
@@ -944,20 +1073,20 @@
           <div class="detail-section-title">Notas públicas</div>
           <div class="detail-list">
             <p>${notasPublicas}</p>
-          </div>
-        ` : ""}
+          </div>` : ""}
 
         <div class="detail-section-title">Enlaces</div>
         <div class="detail-list">
           <p>
-            <a href="${mapsUrl}" onclick="event.stopPropagation()" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:0.25rem 0.7rem; font-size:0.8rem;">
+            <a href="${mapsUrl}" onclick="event.stopPropagation()" target="_blank" rel="noopener noreferrer"
+               class="btn btn-primary" style="padding:0.3rem 0.8rem; font-size:0.8rem;">
               Ver en Maps
             </a>
-            ${webOficial && webOficial !== "Sin información" ? `
-              <a href="${webOficial}" onclick="event.stopPropagation()" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding:0.25rem 0.7rem; font-size:0.8rem; margin-left:0.3rem;">
+            ${webOficial ? `
+              <a href="${webOficial}" onclick="event.stopPropagation()" target="_blank" rel="noopener noreferrer"
+                 class="btn btn-secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem; margin-left:0.3rem;">
                 Web oficial
-              </a>` : ""
-            }
+              </a>` : ""}
           </p>
         </div>
 
@@ -970,28 +1099,12 @@
         </div>
       `;
 
-      detailPanelEl.classList.add("open");
-
-      const btnCerrarDetalle = document.getElementById("btnCerrarDetalle");
-      if (btnCerrarDetalle) {
-        btnCerrarDetalle.addEventListener("click", (e) => {
-          e.stopPropagation();
-          cerrarDetalle();
-        });
-      }
+      modalOverlay.classList.add("open");
+      document.getElementById("btnCerrarModal").addEventListener("click", cerrarModal);
     }
-
-    // Cerrar detalle al hacer clic fuera (en móvil)
-    detailPanelEl.addEventListener("click", (e) => {
-      if (e.target === detailPanelEl) {
-        cerrarDetalle();
-      }
-    });
 
     function pintarInstalaciones(lista) {
       listaInstalacionesEl.innerHTML = "";
-
-      cerrarDetalle();
 
       if (!lista.length) {
         emptyStateEl.style.display = "block";
@@ -1028,9 +1141,7 @@
           <div class="card-header">
             <div>
               <div class="card-title">${inst.nombre || "Instalación sin nombre"}</div>
-              <div class="card-location">
-                ${municipio} · ${provincia} · ${comunidad}
-              </div>
+              <div class="card-location">${municipio} · ${provincia} · ${comunidad}</div>
               ${direccion ? `<div class="card-location">📍 ${direccion}</div>` : ""}
             </div>
             <span class="chip-tipo">${inst.tipo || "Sin información"}</span>
@@ -1044,10 +1155,7 @@
             <strong>Régimen:</strong> ${regimen}
           </div>
 
-          ${notasPublicas
-            ? `<div class="card-subinfo"><strong>Notas:</strong> ${notasPublicas}</div>`
-            : ""
-          }
+          ${notasPublicas ? `<div class="card-subinfo"><strong>Notas:</strong> ${notasPublicas}</div>` : ""}
 
           <div class="card-tags">
             ${inst.piscina ? `<span class="tag tag-positive">Piscina</span>` : ""}
@@ -1082,11 +1190,7 @@
           </div>
         `;
 
-        // Al hacer clic en la tarjeta, abrir detalle
-        card.addEventListener("click", () => {
-          abrirDetalle(inst);
-        });
-
+        card.addEventListener("click", () => abrirModal(inst));
         listaInstalacionesEl.appendChild(card);
       });
     }
