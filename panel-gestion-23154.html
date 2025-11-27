@@ -29,12 +29,12 @@
     }
     .shell{
       width:100%;
-      max-width:960px;
+      max-width:1100px;
       display:grid;
-      grid-template-columns: minmax(0,1.2fr) minmax(0,1.8fr);
+      grid-template-columns: minmax(0,1.1fr) minmax(0,1.9fr);
       gap:1.25rem;
     }
-    @media(max-width:800px){
+    @media(max-width:900px){
       .shell{grid-template-columns:1fr;align-items:flex-start}
     }
     .card{
@@ -76,9 +76,9 @@
       margin-bottom:0.2rem;
       display:block;
     }
-    .input,.select{
+    .input,.select,.textarea{
       width:100%;
-      border-radius:999px;
+      border-radius:12px;
       border:1px solid #1f2937;
       background:#020617;
       color:var(--text);
@@ -87,7 +87,12 @@
       outline:none;
       transition:border-color 0.15s,box-shadow 0.15s,background 0.15s;
     }
-    .input:focus,.select:focus{
+    .textarea{
+      resize:vertical;
+      min-height:60px;
+      border-radius:12px;
+    }
+    .input:focus,.select:focus,.textarea:focus{
       border-color:var(--accent);
       box-shadow:0 0 0 1px #22c55e44;
       background:#020617;
@@ -250,7 +255,7 @@
       <h2>Registrar nueva instalación</h2>
       <p class="desc">
         Completa la información que conozcas. Los campos vacíos se guardarán como
-        <strong>"Sin información"</strong> para mantener la base de datos coherente.
+        <strong>"Sin información"</strong>. Cuantos más datos, mejor podrán elegir otros grupos.
       </p>
 
       <form id="formInstalacion">
@@ -272,7 +277,28 @@
           </div>
           <div>
             <label for="comunidad">Comunidad</label>
-            <input id="comunidad" class="input" type="text" placeholder="Asturias, Castilla y León…" />
+            <select id="comunidad" class="select">
+              <option value="Sin información">Sin información</option>
+              <option value="Andalucía">Andalucía</option>
+              <option value="Aragón">Aragón</option>
+              <option value="Asturias">Asturias</option>
+              <option value="Islas Baleares">Islas Baleares</option>
+              <option value="Canarias">Canarias</option>
+              <option value="Cantabria">Cantabria</option>
+              <option value="Castilla-La Mancha">Castilla-La Mancha</option>
+              <option value="Castilla y León">Castilla y León</option>
+              <option value="Cataluña">Cataluña</option>
+              <option value="Comunidad Valenciana">Comunidad Valenciana</option>
+              <option value="Extremadura">Extremadura</option>
+              <option value="Galicia">Galicia</option>
+              <option value="Comunidad de Madrid">Comunidad de Madrid</option>
+              <option value="Región de Murcia">Región de Murcia</option>
+              <option value="Navarra">Navarra</option>
+              <option value="País Vasco">País Vasco</option>
+              <option value="La Rioja">La Rioja</option>
+              <option value="Ceuta">Ceuta</option>
+              <option value="Melilla">Melilla</option>
+            </select>
           </div>
         </div>
 
@@ -298,32 +324,144 @@
           </div>
         </div>
 
-        <div class="mt">
-          <div class="section-title">Características</div>
-          <div class="chips">
-            <label class="chip">
-              <input id="chkPiscina" type="checkbox" /> <span>Piscina</span>
-            </label>
-            <label class="chip">
-              <input id="chkAccesible" type="checkbox" /> <span>Accesible</span>
-            </label>
-            <label class="chip">
-              <input id="chkAlquilerExcl" type="checkbox" /> <span>Alquiler exclusivo</span>
-            </label>
-            <label class="chip">
-              <input id="chkCampoDep" type="checkbox" /> <span>Campo deportivo</span>
-            </label>
+        <div class="grid-2 mt">
+          <div>
+            <label for="entorno">Entorno</label>
+            <select id="entorno" class="select">
+              <option value="Sin información">Sin información</option>
+              <option value="Montaña">Montaña</option>
+              <option value="Playa">Playa</option>
+              <option value="Rural">Rural</option>
+              <option value="Urbano">Urbano</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div>
+            <label for="usoPrincipal">Uso principal</label>
+            <select id="usoPrincipal" class="select">
+              <option value="Sin información">Sin información</option>
+              <option value="Campamento de verano">Campamento de verano</option>
+              <option value="Convivencia fin de semana">Convivencia fin de semana</option>
+              <option value="Retiro / espiritualidad">Retiro / espiritualidad</option>
+              <option value="Formación">Formación</option>
+              <option value="Multiuso">Multiuso</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2 mt">
+          <div>
+            <label for="regimen">Régimen</label>
+            <select id="regimen" class="select">
+              <option value="Sin información">Sin información</option>
+              <option value="PC">Pensión completa</option>
+              <option value="MP">Media pensión</option>
+              <option value="SA">Solo alojamiento</option>
+              <option value="Alquiler íntegro">Alquiler íntegro</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div>
+            <label for="valoracion">Valoración interna (1-5)</label>
+            <input id="valoracion" class="input" type="number" min="1" max="5" placeholder="Opcional" />
+          </div>
+        </div>
+
+        <div class="grid-2 mt">
+          <div>
+            <label for="habitaciones">Habitaciones (resumen)</label>
+            <input id="habitaciones" class="input" type="text" placeholder="Ej: 8 hab. de 6 plazas" />
+          </div>
+          <div>
+            <label for="banos">Baños (resumen)</label>
+            <input id="banos" class="input" type="text" placeholder="Ej: baños por planta, separados" />
+          </div>
+        </div>
+
+        <div class="grid-2 mt">
+          <div>
+            <label for="distSuper">Distancia a supermercado</label>
+            <input id="distSuper" class="input" type="text" placeholder="Ej: 10 min en coche" />
+          </div>
+          <div>
+            <label for="distCentroMed">Distancia a centro médico</label>
+            <input id="distCentroMed" class="input" type="text" placeholder="Ej: 20 min en coche" />
           </div>
         </div>
 
         <div class="mt">
-          <label for="valoracion">Valoración interna (1-5)</label>
-          <input id="valoracion" class="input" type="number" min="1" max="5" placeholder="Opcional" />
+          <div class="section-title">Instalaciones y servicios</div>
+          <div class="chips">
+            <label class="chip"><input id="chkPiscina" type="checkbox" /> <span>Piscina</span></label>
+            <label class="chip"><input id="chkAccesible" type="checkbox" /> <span>Accesible</span></label>
+            <label class="chip"><input id="chkAlquilerExcl" type="checkbox" /> <span>Alquiler exclusivo</span></label>
+            <label class="chip"><input id="chkCampoDep" type="checkbox" /> <span>Campo deportivo</span></label>
+            <label class="chip"><input id="chkCocinaPropia" type="checkbox" /> <span>Cocina propia</span></label>
+            <label class="chip"><input id="chkCocinaInd" type="checkbox" /> <span>Cocina industrial</span></label>
+            <label class="chip"><input id="chkSalaMulti" type="checkbox" /> <span>Sala multiusos</span></label>
+            <label class="chip"><input id="chkZonaExt" type="checkbox" /> <span>Zona exterior grande</span></label>
+            <label class="chip"><input id="chkSombra" type="checkbox" /> <span>Sombra exterior</span></label>
+            <label class="chip"><input id="chkCalef" type="checkbox" /> <span>Calefacción</span></label>
+            <label class="chip"><input id="chkAire" type="checkbox" /> <span>Aire acondicionado</span></label>
+          </div>
         </div>
 
         <div class="mt">
-          <label for="notas">Notas internas</label>
-          <input id="notas" class="input" type="text" placeholder="Comida, trato, cosas a tener en cuenta…" />
+          <div class="section-title">Acceso y logística</div>
+          <div class="chips">
+            <label class="chip"><input id="chkTranspPub" type="checkbox" /> <span>Transporte público</span></label>
+            <label class="chip"><input id="chkAccesoBus" type="checkbox" /> <span>Acceso bus</span></label>
+            <label class="chip"><input id="chkParking" type="checkbox" /> <span>Parking</span></label>
+            <label class="chip"><input id="chkVallado" type="checkbox" /> <span>Recinto vallado</span></label>
+          </div>
+        </div>
+
+        <div class="mt">
+          <label for="restricciones">Restricciones / normas clave</label>
+          <input id="restricciones" class="input" type="text" placeholder="Ej: silencio a las 23h, no fiestas…" />
+        </div>
+
+        <div class="grid-2 mt">
+          <div>
+            <label for="horariosSilencio">Horarios de silencio</label>
+            <input id="horariosSilencio" class="input" type="text" placeholder="Ej: 23:00–08:00" />
+          </div>
+          <div>
+            <label for="riesgos">Riesgos cercanos</label>
+            <input id="riesgos" class="input" type="text" placeholder="Ej: río cercano, carretera…" />
+          </div>
+        </div>
+
+        <div class="grid-2 mt">
+          <div>
+            <label for="limiteGrupos">Límite de grupo / observaciones</label>
+            <input id="limiteGrupos" class="input" type="text" placeholder="Ej: máximo 80 personas reales" />
+          </div>
+          <div>
+            <label for="telContacto">Teléfono contacto (interno)</label>
+            <input id="telContacto" class="input" type="text" placeholder="No se mostrará en la web" />
+          </div>
+        </div>
+
+        <div class="grid-2 mt">
+          <div>
+            <label for="emailContacto">Email contacto (interno)</label>
+            <input id="emailContacto" class="input" type="email" placeholder="No se mostrará en la web" />
+          </div>
+          <div>
+            <label for="webOficial">Web oficial</label>
+            <input id="webOficial" class="input" type="text" placeholder="URL de la instalación" />
+          </div>
+        </div>
+
+        <div class="mt">
+          <label for="notasPublicas">Notas públicas (se mostrarán en la web)</label>
+          <textarea id="notasPublicas" class="textarea" placeholder="Resumen breve para orientar a otros grupos…"></textarea>
+        </div>
+
+        <div class="mt">
+          <label for="notas">Notas internas (solo para la organización)</label>
+          <textarea id="notas" class="textarea" placeholder="Comida, trato, detalles logísticos, contacto real…"></textarea>
         </div>
 
         <div style="margin-top:1rem;display:flex;gap:0.7rem;align-items:center;">
@@ -342,7 +480,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
   <script>
-    // === 1) TU CONFIG DE FIREBASE ===
     const firebaseConfig = {
       apiKey: "AIzaSyD_qFTqRsPwHTO9P8nyfikyWSAV1kt7k90",
       authDomain: "red-albergues.firebaseapp.com",
@@ -353,7 +490,6 @@
       measurementId: "G-JZXCJFMMEB"
     };
 
-    // === 2) Inicializar Firebase ===
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
@@ -361,7 +497,6 @@
     const estadoConexionEl = document.getElementById("estadoConexion");
     estadoConexionEl.textContent = "Conectado a Firebase";
 
-    // === 3) Elementos del DOM ===
     const loginBox = document.getElementById("loginBox");
     const loggedBox = document.getElementById("loggedBox");
     const loginEmailEl = document.getElementById("loginEmail");
@@ -382,11 +517,42 @@
     const municipioEl = document.getElementById("municipio");
     const plazasMinEl = document.getElementById("plazasMin");
     const plazasMaxEl = document.getElementById("plazasMax");
+    const entornoEl = document.getElementById("entorno");
+    const usoPrincipalEl = document.getElementById("usoPrincipal");
+    const regimenEl = document.getElementById("regimen");
+    const valoracionEl = document.getElementById("valoracion");
+    const habitacionesEl = document.getElementById("habitaciones");
+    const banosEl = document.getElementById("banos");
+    const distSuperEl = document.getElementById("distSuper");
+    const distCentroMedEl = document.getElementById("distCentroMed");
+
     const chkPiscinaEl = document.getElementById("chkPiscina");
     const chkAccesibleEl = document.getElementById("chkAccesible");
     const chkAlquilerExclEl = document.getElementById("chkAlquilerExcl");
     const chkCampoDepEl = document.getElementById("chkCampoDep");
-    const valoracionEl = document.getElementById("valoracion");
+    const chkCocinaPropiaEl = document.getElementById("chkCocinaPropia");
+    const chkCocinaIndEl = document.getElementById("chkCocinaInd");
+    const chkSalaMultiEl = document.getElementById("chkSalaMulti");
+    const chkZonaExtEl = document.getElementById("chkZonaExt");
+    const chkSombraEl = document.getElementById("chkSombra");
+    const chkCalefEl = document.getElementById("chkCalef");
+    const chkAireEl = document.getElementById("chkAire");
+
+    const chkTranspPubEl = document.getElementById("chkTranspPub");
+    const chkAccesoBusEl = document.getElementById("chkAccesoBus");
+    const chkParkingEl = document.getElementById("chkParking");
+    const chkValladoEl = document.getElementById("chkVallado");
+
+    const restriccionesEl = document.getElementById("restricciones");
+    const horariosSilencioEl = document.getElementById("horariosSilencio");
+    const riesgosEl = document.getElementById("riesgos");
+    const limiteGruposEl = document.getElementById("limiteGrupos");
+
+    const telContactoEl = document.getElementById("telContacto");
+    const emailContactoEl = document.getElementById("emailContacto");
+    const webOficialEl = document.getElementById("webOficial");
+
+    const notasPublicasEl = document.getElementById("notasPublicas");
     const notasEl = document.getElementById("notas");
 
     function normalizarTexto(v) {
@@ -399,7 +565,6 @@
       return isNaN(n) ? null : n;
     }
 
-    // === 4) Gestión de sesión ===
     auth.onAuthStateChanged(user => {
       if (user) {
         loginBox.classList.add("hidden");
@@ -416,7 +581,6 @@
       }
     });
 
-    // === 5) Login y logout ===
     btnLogin.addEventListener("click", async () => {
       loginErrorEl.textContent = "";
       try {
@@ -441,7 +605,6 @@
       await auth.signOut();
     });
 
-    // === 6) Envío del formulario ===
     formInst.addEventListener("submit", async (e) => {
       e.preventDefault();
       formErrorEl.textContent = "";
@@ -461,14 +624,49 @@
         municipio: normalizarTexto(municipioEl.value),
         plazas_min: normalizarNumero(plazasMinEl.value),
         plazas_max: normalizarNumero(plazasMaxEl.value),
+
+        entorno: normalizarTexto(entornoEl.value),
+        uso_principal: normalizarTexto(usoPrincipalEl.value),
+        regimen: normalizarTexto(regimenEl.value),
+
+        habitaciones: normalizarTexto(habitacionesEl.value),
+        banos: normalizarTexto(banosEl.value),
+        distancia_supermercado: normalizarTexto(distSuperEl.value),
+        distancia_centro_medico: normalizarTexto(distCentroMedEl.value),
+
         piscina: !!chkPiscinaEl.checked,
         accesible: !!chkAccesibleEl.checked,
         alquiler_exclusivo: !!chkAlquilerExclEl.checked,
         tiene_campo_deportivo: !!chkCampoDepEl.checked,
+        cocina_propia: !!chkCocinaPropiaEl.checked,
+        cocina_industrial: !!chkCocinaIndEl.checked,
+        sala_multiusos: !!chkSalaMultiEl.checked,
+        zona_exterior_grande: !!chkZonaExtEl.checked,
+        sombra_exterior: !!chkSombraEl.checked,
+        calefaccion: !!chkCalefEl.checked,
+        aire_acondicionado: !!chkAireEl.checked,
+
+        transporte_publico: !!chkTranspPubEl.checked,
+        acceso_bus: !!chkAccesoBusEl.checked,
+        parking: !!chkParkingEl.checked,
+        vallado: !!chkValladoEl.checked,
+
+        restricciones: normalizarTexto(restriccionesEl.value),
+        horarios_silencio: normalizarTexto(horariosSilencioEl.value),
+        riesgos_cercanos: normalizarTexto(riesgosEl.value),
+        limite_grupos: normalizarTexto(limiteGruposEl.value),
+
+        tel_contacto: normalizarTexto(telContactoEl.value),
+        email_contacto: normalizarTexto(emailContactoEl.value),
+        web_oficial: normalizarTexto(webOficialEl.value),
+
         valoracion_interna: normalizarNumero(valoracionEl.value),
+        notas_publicas: normalizarTexto(notasPublicasEl.value),
         notas_internas: normalizarTexto(notasEl.value),
+
         creado_por: user.email || "desconocido",
-        creado_en: firebase.firestore.FieldValue.serverTimestamp()
+        creado_en: firebase.firestore.FieldValue.serverTimestamp(),
+        ultima_actualizacion: firebase.firestore.FieldValue.serverTimestamp()
       };
 
       try {
