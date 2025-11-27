@@ -2,10 +2,562 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Red de Albergues</title>
+  <title>Buscador de albergues y campamentos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --color-bg: #f4f5f7;
+      --color-card: #ffffff;
+      --color-primary: #2563eb;
+      --color-primary-soft: #dbeafe;
+      --color-text: #111827;
+      --color-muted: #6b7280;
+      --radius-lg: 16px;
+      --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe, #f4f5f7);
+      color: var(--color-text);
+      line-height: 1.5;
+      padding: 1.5rem;
+    }
+
+    .app-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    header p {
+      margin-top: 0.4rem;
+      color: var(--color-muted);
+      max-width: 600px;
+    }
+
+    .filters-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 800px) {
+      .filters-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 550px) {
+      body {
+        padding: 1rem;
+      }
+      .filters-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .input, .select {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: 0.45rem 0.8rem;
+      font-size: 0.9rem;
+      background: #f9fafb;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+
+    .input:focus, .select:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-primary-soft);
+      background: #ffffff;
+    }
+
+    .input::placeholder {
+      color: #9ca3af;
+    }
+
+    .filters-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      justify-content: space-between;
+    }
+
+    .checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--color-muted);
+    }
+
+    .checkboxes label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: #f3f4f6;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .checkboxes input {
+      accent-color: var(--color-primary);
+    }
+
+    .checkboxes label:hover {
+      background: #e5e7eb;
+    }
+
+    .filters-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: auto;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+      transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      box-shadow: 0 5px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .results-header span {
+      font-size: 0.85rem;
+      color: var(--color-muted);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--color-card);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(219, 234, 254, 0.7), transparent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.15);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .chip-tipo {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .card-location {
+      font-size: 0.85rem;
+      color: var(--color-muted);
+    }
+
+    .card-capacidad {
+      font-size: 0.85rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.2rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      border-radius: 999px;
+      padding: 0.1rem 0.5rem;
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    .tag-positive {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.4rem;
+      gap: 0.5rem;
+    }
+
+    .valoracion {
+      font-size: 0.8rem;
+      color: #f59e0b;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.15rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--color-muted);
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-  <h1>Web pública funcionando</h1>
-  <p>Esta es la página publicada en GitHub Pages.</p>
+  <div class="app-container">
+    <header>
+      <h1>Buscador de albergues y campamentos</h1>
+      <p>
+        Encuentra instalaciones para convivencias, campamentos y retiros
+        filtrando por zona, tipo y capacidad.
+      </p>
+    </header>
+    
+    <section class="filters-card">
+      <div class="filters-grid">
+        <div>
+          <div class="field-label">Buscar</div>
+          <input id="filtroTexto" class="input" type="text" placeholder="Nombre, pueblo, provincia…" />
+        </div>
+        <div>
+          <div class="field-label">Comunidad</div>
+          <select id="filtroComunidad" class="select">
+            <option value="">Todas</option>
+            <option value="Asturias">Asturias</option>
+            <option value="Castilla y León">Castilla y León</option>
+            <option value="Galicia">Galicia</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label">Tipo</div>
+          <select id="filtroTipo" class="select">
+            <option value="">Todos</option>
+            <option value="Albergue">Albergue</option>
+            <option value="Campamento">Campamento</option>
+            <option value="Casa rural">Casa rural</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label">Plazas mínimas</div>
+          <input id="filtroPlazas" class="input" type="number" min="0" placeholder="Ej: 40" />
+        </div>
+      </div>
+
+      <div class="filters-bottom">
+        <div class="checkboxes">
+          <label>
+            <input id="filtroPiscina" type="checkbox" />
+            <span>Piscina</span>
+          </label>
+          <label>
+            <input id="filtroAccesible" type="checkbox" />
+            <span>Accesible</span>
+          </label>
+          <label>
+            <input id="filtroAlquilerExclusivo" type="checkbox" />
+            <span>Alquiler exclusivo</span>
+          </label>
+        </div>
+        <div class="filters-actions">
+          <button id="btnLimpiar" class="btn btn-secondary">Limpiar filtros</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-header">
+      <h2 style="font-size: 1rem;">Resultados</h2>
+      <span id="contadorResultados">0 instalaciones encontradas</span>
+    </section>
+
+    <section id="listaInstalaciones" class="cards-grid"></section>
+
+    <div id="emptyState" class="empty-state" style="display:none;">
+      No hay instalaciones que coincidan con los filtros actuales. Prueba a ajustar la búsqueda.
+    </div>
+  </div>
+
+  <script>
+    const instalaciones = [
+      {
+        id: 1,
+        nombre: "Albergue Montes Claros",
+        tipo: "Albergue",
+        comunidad: "Asturias",
+        provincia: "Asturias",
+        municipio: "Oviedo",
+        plazas_min: 30,
+        plazas_max: 80,
+        piscina: false,
+        accesible: true,
+        alquiler_exclusivo: true,
+        tiene_campo_deportivo: true,
+        valoracion_interna: 5
+      },
+      {
+        id: 2,
+        nombre: "Campamento Valle Verde",
+        tipo: "Campamento",
+        comunidad: "Castilla y León",
+        provincia: "León",
+        municipio: "Cistierna",
+        plazas_min: 60,
+        plazas_max: 150,
+        piscina: true,
+        accesible: false,
+        alquiler_exclusivo: true,
+        tiene_campo_deportivo: true,
+        valoracion_interna: 4
+      },
+      {
+        id: 3,
+        nombre: "Casa Rural Fonte do Río",
+        tipo: "Casa rural",
+        comunidad: "Galicia",
+        provincia: "Lugo",
+        municipio: "Ribadeo",
+        plazas_min: 15,
+        plazas_max: 35,
+        piscina: true,
+        accesible: true,
+        alquiler_exclusivo: false,
+        tiene_campo_deportivo: false,
+        valoracion_interna: 4
+      }
+    ];
+     const listaInstalacionesEl = document.getElementById("listaInstalaciones");
+    const contadorResultadosEl = document.getElementById("contadorResultados");
+    const emptyStateEl = document.getElementById("emptyState");
+
+    const filtroTextoEl = document.getElementById("filtroTexto");
+    const filtroComunidadEl = document.getElementById("filtroComunidad");
+    const filtroTipoEl = document.getElementById("filtroTipo");
+    const filtroPlazasEl = document.getElementById("filtroPlazas");
+    const filtroPiscinaEl = document.getElementById("filtroPiscina");
+    const filtroAccesibleEl = document.getElementById("filtroAccesible");
+    const filtroAlquilerExclusivoEl = document.getElementById("filtroAlquilerExclusivo");
+    const btnLimpiar = document.getElementById("btnLimpiar");
+
+    function formatearCapacidad(inst) {
+      if (inst.plazas_min && inst.plazas_max) {
+        return `De ${inst.plazas_min} a ${inst.plazas_max} plazas`;
+      }
+      if (inst.plazas_max) {
+        return `Hasta ${inst.plazas_max} plazas`;
+      }
+      return "Capacidad no especificada";
+    }
+
+    function pintarInstalaciones(lista) {
+      listaInstalacionesEl.innerHTML = "";
+
+      if (!lista.length) {
+        emptyStateEl.style.display = "block";
+        contadorResultadosEl.textContent = "0 instalaciones encontradas";
+        return;
+      }
+
+      emptyStateEl.style.display = "none";
+      contadorResultadosEl.textContent =
+        lista.length === 1
+          ? "1 instalación encontrada"
+          : `${lista.length} instalaciones encontradas`;
+
+      lista.forEach(inst => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <div class="card-title">${inst.nombre}</div>
+              <div class="card-location">
+                ${inst.municipio} · ${inst.provincia} · ${inst.comunidad}
+              </div>
+            </div>
+            <span class="chip-tipo">${inst.tipo}</span>
+          </div>
+          <div class="card-capacidad">${formatearCapacidad(inst)}</div>
+          <div class="card-tags">
+            ${inst.piscina ? `<span class="tag tag-positive">Piscina</span>` : ""}
+            ${inst.tiene_campo_deportivo ? `<span class="tag">Campo deportivo</span>` : ""}
+            ${inst.accesible ? `<span class="tag">Accesible</span>` : ""}
+            ${inst.alquiler_exclusivo ? `<span class="tag">Alquiler exclusivo</span>` : ""}
+          </div>
+          <div class="card-footer">
+            <div class="valoracion">
+              ${"★".repeat(inst.valoracion_interna || 0)}
+              <span style="color:#9ca3af;">${inst.valoracion_interna || "-"}/5</span>
+            </div>
+            <button class="btn btn-primary">
+              Ver detalles
+            </button>
+          </div>
+        `;
+  listaInstalacionesEl.appendChild(card);
+      });
+    }
+
+    function aplicarFiltros() {
+      const texto = filtroTextoEl.value.trim().toLowerCase();
+      const comunidad = filtroComunidadEl.value;
+      const tipo = filtroTipoEl.value;
+      const plazasMin = Number(filtroPlazasEl.value) || 0;
+      const piscina = filtroPiscinaEl.checked;
+      const accesible = filtroAccesibleEl.checked;
+      const alquilerExclusivo = filtroAlquilerExclusivoEl.checked;
+
+      const filtradas = instalaciones.filter(inst => {
+        if (texto) {
+          const combinado = `${inst.nombre} ${inst.municipio} ${inst.provincia} ${inst.comunidad}`.toLowerCase();
+          if (!combinado.includes(texto)) return false;
+        }
+
+        if (comunidad && inst.comunidad !== comunidad) return false;
+        if (tipo && inst.tipo !== tipo) return false;
+        if (plazasMin && (inst.plazas_max || 0) < plazasMin) return false;
+        if (piscina && !inst.piscina) return false;
+        if (accesible && !inst.accesible) return false;
+        if (alquilerExclusivo && !inst.alquiler_exclusivo) return false;
+
+        return true;
+      });
+
+      pintarInstalaciones(filtradas);
+    }
+
+    function limpiarFiltros() {
+      filtroTextoEl.value = "";
+      filtroComunidadEl.value = "";
+      filtroTipoEl.value = "";
+      filtroPlazasEl.value = "";
+      filtroPiscinaEl.checked = false;
+      filtroAccesibleEl.checked = false;
+      filtroAlquilerExclusivoEl.checked = false;
+
+      pintarInstalaciones(inicialOrdenadas);
+    }
+
+    [
+      filtroTextoEl, filtroComunidadEl, filtroTipoEl, filtroPlazasEl,
+      filtroPiscinaEl, filtroAccesibleEl, filtroAlquilerExclusivoEl
+    ].forEach(el => el.addEventListener("input", aplicarFiltros));
+
+    btnLimpiar.addEventListener("click", limpiarFiltros);
+
+    const inicialOrdenadas = [...instalaciones].sort((a, b) =>
+      a.nombre.localeCompare(b.nombre, "es")
+    );
+    pintarInstalaciones(inicialOrdenadas);
+  </script>
 </body>
 </html>
