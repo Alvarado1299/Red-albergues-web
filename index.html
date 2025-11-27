@@ -2,9 +2,12 @@
 <html lang="es" class="">
 <head>
   <meta charset="UTF-8" />
-  <title>Red de Albergues y Campamentos</title>
+  <title>ProyectoAAG - Red de Albergues y Campamentos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    /* ==========================
+       VARIABLES DE COLOR (CLARO)
+       ========================== */
     :root {
       --color-bg: #f4f5f7;
       --color-bg-gradient1: #e0f2fe;
@@ -23,6 +26,9 @@
       --alert-text: #854d0e;
     }
 
+    /* ==========================
+       MODO OSCURO
+       ========================== */
     .dark {
       --color-bg: #020617;
       --color-bg-gradient1: #020617;
@@ -61,6 +67,9 @@
       margin: 0 auto;
     }
 
+    /* ==========================
+       BARRA SUPERIOR (MODO OSCURO)
+       ========================== */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -98,6 +107,9 @@
       border-color: var(--color-primary);
     }
 
+    /* ==========================
+       CABECERA
+       ========================== */
     header {
       margin-bottom: 1.5rem;
     }
@@ -124,8 +136,9 @@
       border: 1px solid var(--alert-border);
     }
 
-    /* Filtros */
-
+    /* ==========================
+       FILTROS STICKY COLAPSABLES
+       ========================== */
     .filters-wrapper {
       position: sticky;
       top: 0.75rem;
@@ -231,6 +244,14 @@
       .filters-grid,
       .filters-grid-secondary {
         grid-template-columns: 1fr;
+      }
+    }
+
+    /* En móviles, los filtros dejan de ser sticky para no tapar el listado */
+    @media (max-width: 768px) {
+      .filters-wrapper {
+        position: static;
+        top: auto;
       }
     }
 
@@ -385,6 +406,9 @@
       background: rgba(148, 163, 184, 0.15);
     }
 
+    /* ==========================
+       CABECERA RESULTADOS + VISTA
+       ========================== */
     .results-header {
       display: flex;
       justify-content: space-between;
@@ -425,6 +449,9 @@
       border-color: var(--color-primary);
     }
 
+    /* ==========================
+       TARJETAS LISTADO
+       ========================== */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -568,8 +595,9 @@
       font-size: 0.9rem;
     }
 
-    /* MODAL DETALLE */
-
+    /* ==========================
+       MODAL DETALLE (POPUP)
+       ========================== */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -671,6 +699,7 @@
 </head>
 <body>
   <div class="app-container">
+    <!-- BOTÓN DE MODO OSCURO -->
     <div class="top-bar">
       <button id="themeToggle" class="theme-toggle" type="button">
         <span class="icon" id="themeIcon">🌞</span>
@@ -678,8 +707,9 @@
       </button>
     </div>
 
+    <!-- CABECERA PRINCIPAL -->
     <header>
-      <h1>Proyecto red de Albergues y Campamentos</h1>
+      <h1>ProyectoAAG · Red de Albergues y Campamentos</h1>
       <p>
         Buscador colaborativo de instalaciones para campamentos, convivencias, retiros y encuentros de grupos juveniles.
         Los datos proceden de la experiencia de distintos grupos y pueden estar desactualizados: verifica siempre con la instalación.
@@ -704,7 +734,7 @@
         </div>
 
         <div class="filters-body">
-          <!-- Fila principal de filtros -->
+          <!-- Fila principal -->
           <div class="filters-grid">
             <div>
               <div class="field-label">Buscar</div>
@@ -759,7 +789,7 @@
             </div>
           </div>
 
-          <!-- Segunda fila de filtros -->
+          <!-- Segunda fila -->
           <div class="filters-grid-secondary">
             <div>
               <div class="field-label">Uso principal</div>
@@ -793,7 +823,7 @@
             </div>
           </div>
 
-          <!-- Checkboxes de características -->
+          <!-- Checkboxes -->
           <div class="filters-bottom">
             <div class="checkboxes">
               <label><input id="filtroPiscina" type="checkbox" /><span>Piscina</span></label>
@@ -811,6 +841,9 @@
               <label><input id="filtroCalefaccion" type="checkbox" /><span>Calefacción</span></label>
               <label><input id="filtroAire" type="checkbox" /><span>Aire acondicionado</span></label>
               <label><input id="filtroVallado" type="checkbox" /><span>Recinto vallado</span></label>
+              <!-- NUEVOS CAMPOS -->
+              <label><input id="filtroTiendas" type="checkbox" /><span>Zona para tiendas</span></label>
+              <label><input id="filtroIntendencia" type="checkbox" /><span>Espacio intendencia/botiquín</span></label>
             </div>
 
             <div class="filters-actions">
@@ -821,6 +854,7 @@
       </section>
     </div>
 
+    <!-- CABECERA RESULTADOS -->
     <section class="results-header">
       <h2 style="font-size: 1rem;">Resultados</h2>
       <span id="contadorResultados">0 instalaciones encontradas</span>
@@ -831,8 +865,10 @@
       </div>
     </section>
 
+    <!-- LISTADO -->
     <section id="listaInstalaciones" class="cards-grid"></section>
 
+    <!-- SIN RESULTADOS -->
     <div id="emptyState" class="empty-state" style="display:none;">
       No hay instalaciones que coincidan con los filtros actuales. Prueba a ajustar la búsqueda.
     </div>
@@ -843,12 +879,12 @@
     <div id="detalleCard" class="modal-card"></div>
   </div>
 
-  <!-- Firebase compat -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
-    // Config Firebase
+    /* FIREBASE */
     const firebaseConfig = {
       apiKey: "AIzaSyD_qFTqRsPwHTO9P8nyfikyWSAV1kt7k90",
       authDomain: "red-albergues.firebaseapp.com",
@@ -865,6 +901,7 @@
     let instalaciones = [];
     let inicialOrdenadas = [];
 
+    // DOM
     const listaInstalacionesEl = document.getElementById("listaInstalaciones");
     const contadorResultadosEl = document.getElementById("contadorResultados");
     const emptyStateEl = document.getElementById("emptyState");
@@ -893,23 +930,22 @@
     const filtroCalefaccionEl = document.getElementById("filtroCalefaccion");
     const filtroAireEl = document.getElementById("filtroAire");
     const filtroValladoEl = document.getElementById("filtroVallado");
+    const filtroTiendasEl = document.getElementById("filtroTiendas");
+    const filtroIntendenciaEl = document.getElementById("filtroIntendencia");
 
     const btnLimpiar = document.getElementById("btnLimpiar");
-
     const filtersCard = document.getElementById("filtersCard");
     const filtersHeader = document.getElementById("filtersHeader");
-
     const btnVistaTarjetas = document.getElementById("btnVistaTarjetas");
     const btnVistaLista = document.getElementById("btnVistaLista");
-
     const modalOverlay = document.getElementById("detalleOverlay");
     const modalCard = document.getElementById("detalleCard");
 
-    // Modo oscuro
     const themeToggleBtn = document.getElementById("themeToggle");
     const themeIcon = document.getElementById("themeIcon");
     const themeText = document.getElementById("themeText");
 
+    /* MODO OSCURO */
     function applyTheme(theme) {
       const html = document.documentElement;
       if (theme === "dark") {
@@ -939,11 +975,12 @@
       applyTheme(isDark ? "light" : "dark");
     });
 
-    // Colapsar filtros
+    /* COLAPSAR FILTROS */
     filtersHeader.addEventListener("click", () => {
       filtersCard.classList.toggle("collapsed");
     });
 
+    /* UTILIDADES */
     function formatearCapacidad(inst) {
       const min = inst.plazas_min ?? null;
       const max = inst.plazas_max ?? null;
@@ -959,7 +996,7 @@
       return d.toLocaleDateString("es-ES", { year: "numeric", month: "short" });
     }
 
-    // Vista tarjetas/lista
+    /* VISTA TARJETAS/LISTA */
     function setVista(lista) {
       if (lista) {
         listaInstalacionesEl.classList.add("list-view");
@@ -975,7 +1012,7 @@
     btnVistaLista.addEventListener("click", () => setVista(true));
     btnVistaTarjetas.addEventListener("click", () => setVista(false));
 
-    // Modal
+    /* MODAL DETALLE */
     function cerrarModal() {
       modalOverlay.classList.remove("open");
       modalCard.innerHTML = "";
@@ -1011,6 +1048,9 @@
       const limiteGrupos = inst.limite_grupos && inst.limite_grupos !== "Sin información" ? inst.limite_grupos : "";
       const webOficial = inst.web_oficial && inst.web_oficial !== "Sin información" ? inst.web_oficial : "";
 
+      const telefono = inst.telefono && inst.telefono !== "Sin información" ? inst.telefono : "";
+      const emailContacto = inst.email_contacto && inst.email_contacto !== "Sin información" ? inst.email_contacto : "";
+
       const capacidadTexto = formatearCapacidad(inst);
 
       modalCard.innerHTML = `
@@ -1039,6 +1079,8 @@
           ${inst.calefaccion ? `<span class="tag">Calefacción</span>` : ""}
           ${inst.aire_acondicionado ? `<span class="tag">Aire acondicionado</span>` : ""}
           ${inst.vallado ? `<span class="tag">Recinto vallado</span>` : ""}
+          ${inst.zona_tiendas_campana ? `<span class="tag">Zona para tiendas</span>` : ""}
+          ${inst.espacio_intendencia ? `<span class="tag">Intendencia / botiquín</span>` : ""}
         </div>
 
         <div class="detail-section-title">Resumen</div>
@@ -1075,6 +1117,20 @@
             <p>${notasPublicas}</p>
           </div>` : ""}
 
+        <div class="detail-section-title">Contacto</div>
+        <div class="detail-list">
+          <p><strong>Teléfono:</strong> ${
+            telefono
+              ? `<a href="tel:${telefono.replace(/\s+/g,'')}" onclick="event.stopPropagation()">${telefono}</a>`
+              : "Sin información"
+          }</p>
+          <p><strong>Email:</strong> ${
+            emailContacto
+              ? `<a href="mailto:${emailContacto}" onclick="event.stopPropagation()">${emailContacto}</a>`
+              : "Sin información"
+          }</p>
+        </div>
+
         <div class="detail-section-title">Enlaces</div>
         <div class="detail-list">
           <p>
@@ -1098,10 +1154,12 @@
           <div>Actualizado: ${actualizacion}</div>
         </div>
       `;
+
       modalOverlay.classList.add("open");
       document.getElementById("btnCerrarModal").addEventListener("click", cerrarModal);
     }
 
+    /* PINTAR LISTA */
     function pintarInstalaciones(lista) {
       listaInstalacionesEl.innerHTML = "";
 
@@ -1172,6 +1230,8 @@
             ${inst.calefaccion ? `<span class="tag">Calefacción</span>` : ""}
             ${inst.aire_acondicionado ? `<span class="tag">Aire acondicionado</span>` : ""}
             ${inst.vallado ? `<span class="tag">Recinto vallado</span>` : ""}
+            ${inst.zona_tiendas_campana ? `<span class="tag">Zona para tiendas</span>` : ""}
+            ${inst.espacio_intendencia ? `<span class="tag">Intendencia / botiquín</span>` : ""}
           </div>
 
           <div class="card-footer">
@@ -1194,6 +1254,7 @@
       });
     }
 
+    /* FILTROS */
     function aplicarFiltros() {
       const texto = filtroTextoEl.value.trim().toLowerCase();
       const comunidad = filtroComunidadEl.value;
@@ -1219,6 +1280,8 @@
       const calef = filtroCalefaccionEl.checked;
       const aire = filtroAireEl.checked;
       const vallado = filtroValladoEl.checked;
+      const tiendas = filtroTiendasEl.checked;
+      const intendencia = filtroIntendenciaEl.checked;
 
       const filtradas = instalaciones.filter(inst => {
         const nombre = (inst.nombre || "").toLowerCase();
@@ -1260,6 +1323,8 @@
         if (calef && !inst.calefaccion) return false;
         if (aire && !inst.aire_acondicionado) return false;
         if (vallado && !inst.vallado) return false;
+        if (tiendas && !inst.zona_tiendas_campana) return false;
+        if (intendencia && !inst.espacio_intendencia) return false;
 
         return true;
       });
@@ -1281,7 +1346,7 @@
         filtroPiscinaEl, filtroAccesibleEl, filtroAlquilerExclusivoEl, filtroCampoDeportivoEl,
         filtroCocinaIndustrialEl, filtroCocinaPropiaEl, filtroSalaMultiusosEl, filtroZonaExteriorEl,
         filtroSombraEl, filtroTransportePublicoEl, filtroAccesoBusEl, filtroParkingEl,
-        filtroCalefaccionEl, filtroAireEl, filtroValladoEl
+        filtroCalefaccionEl, filtroAireEl, filtroValladoEl, filtroTiendasEl, filtroIntendenciaEl
       ].forEach(el => el.checked = false);
 
       pintarInstalaciones(inicialOrdenadas);
@@ -1293,11 +1358,12 @@
       filtroPiscinaEl, filtroAccesibleEl, filtroAlquilerExclusivoEl, filtroCampoDeportivoEl,
       filtroCocinaIndustrialEl, filtroCocinaPropiaEl, filtroSalaMultiusosEl, filtroZonaExteriorEl,
       filtroSombraEl, filtroTransportePublicoEl, filtroAccesoBusEl, filtroParkingEl,
-      filtroCalefaccionEl, filtroAireEl, filtroValladoEl
+      filtroCalefaccionEl, filtroAireEl, filtroValladoEl, filtroTiendasEl, filtroIntendenciaEl
     ].forEach(el => el.addEventListener("input", aplicarFiltros));
 
     btnLimpiar.addEventListener("click", limpiarFiltros);
 
+    /* CARGA DE DATOS */
     async function cargarInstalaciones() {
       try {
         const snapshot = await db.collection("instalaciones").get();
