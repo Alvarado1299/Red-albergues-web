@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Buscador de albergues y campamentos</title>
+  <title>Red de Albergues y Campamentos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
@@ -31,7 +31,7 @@
     }
 
     .app-container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
@@ -48,11 +48,21 @@
     header p {
       margin-top: 0.4rem;
       color: var(--color-muted);
-      max-width: 600px;
+      max-width: 700px;
+    }
+
+    .alert {
+      margin-top: 0.6rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 12px;
+      background: #fef9c3;
+      color: #854d0e;
+      font-size: 0.85rem;
+      border: 1px solid #facc15;
     }
 
     .filters-card {
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(10px);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-soft);
@@ -67,17 +77,26 @@
       margin-bottom: 0.75rem;
     }
 
-    @media (max-width: 800px) {
-      .filters-grid {
+    .filters-grid-secondary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 900px) {
+      .filters-grid,
+      .filters-grid-secondary {
         grid-template-columns: 1fr 1fr;
       }
     }
 
-    @media (max-width: 550px) {
+    @media (max-width: 600px) {
       body {
         padding: 1rem;
       }
-      .filters-grid {
+      .filters-grid,
+      .filters-grid-secondary {
         grid-template-columns: 1fr;
       }
     }
@@ -114,7 +133,7 @@
     .filters-bottom {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
+      align-items: flex-start;
       gap: 0.75rem;
       justify-content: space-between;
     }
@@ -122,8 +141,8 @@
     .checkboxes {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
-      font-size: 0.85rem;
+      gap: 0.5rem;
+      font-size: 0.8rem;
       color: var(--color-muted);
     }
 
@@ -269,6 +288,11 @@
       font-size: 0.85rem;
     }
 
+    .card-subinfo {
+      font-size: 0.8rem;
+      color: var(--color-muted);
+    }
+
     .card-tags {
       display: flex;
       flex-wrap: wrap;
@@ -289,12 +313,19 @@
       color: #166534;
     }
 
+    .tag-strong {
+      background: #e0f2fe;
+      color: #1d4ed8;
+    }
+
     .card-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-top: 0.4rem;
       gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--color-muted);
     }
 
     .valoracion {
@@ -316,26 +347,46 @@
 <body>
   <div class="app-container">
     <header>
-      <h1>Buscador de albergues y campamentos</h1>
+      <h1>Red de Albergues y Campamentos</h1>
       <p>
-        Encuentra instalaciones para convivencias, campamentos y retiros
-        filtrando por zona, tipo y capacidad.
+        Buscador colaborativo de instalaciones para campamentos, convivencias, retiros y encuentros de grupos juveniles.
+        Los datos proceden de la experiencia de distintos grupos y pueden estar desactualizados: verifica siempre con la instalación.
       </p>
+      <div class="alert">
+        Información compartida por voluntarios. No es una base oficial. Confirma precios, normas y disponibilidad directamente con cada instalación.
+      </div>
     </header>
-    
+
     <section class="filters-card">
+      <!-- Fila principal de filtros -->
       <div class="filters-grid">
         <div>
           <div class="field-label">Buscar</div>
-          <input id="filtroTexto" class="input" type="text" placeholder="Nombre, pueblo, provincia…" />
+          <input id="filtroTexto" class="input" type="text" placeholder="Nombre, pueblo, provincia, notas…" />
         </div>
         <div>
           <div class="field-label">Comunidad</div>
           <select id="filtroComunidad" class="select">
             <option value="">Todas</option>
+            <option value="Andalucía">Andalucía</option>
+            <option value="Aragón">Aragón</option>
             <option value="Asturias">Asturias</option>
+            <option value="Islas Baleares">Islas Baleares</option>
+            <option value="Canarias">Canarias</option>
+            <option value="Cantabria">Cantabria</option>
+            <option value="Castilla-La Mancha">Castilla-La Mancha</option>
             <option value="Castilla y León">Castilla y León</option>
+            <option value="Cataluña">Cataluña</option>
+            <option value="Comunidad Valenciana">Comunidad Valenciana</option>
+            <option value="Extremadura">Extremadura</option>
             <option value="Galicia">Galicia</option>
+            <option value="Comunidad de Madrid">Comunidad de Madrid</option>
+            <option value="Región de Murcia">Región de Murcia</option>
+            <option value="Navarra">Navarra</option>
+            <option value="País Vasco">País Vasco</option>
+            <option value="La Rioja">La Rioja</option>
+            <option value="Ceuta">Ceuta</option>
+            <option value="Melilla">Melilla</option>
           </select>
         </div>
         <div>
@@ -345,29 +396,77 @@
             <option value="Albergue">Albergue</option>
             <option value="Campamento">Campamento</option>
             <option value="Casa rural">Casa rural</option>
+            <option value="Residencia">Residencia</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label">Entorno</div>
+          <select id="filtroEntorno" class="select">
+            <option value="">Cualquiera</option>
+            <option value="Montaña">Montaña</option>
+            <option value="Playa">Playa</option>
+            <option value="Rural">Rural</option>
+            <option value="Urbano">Urbano</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Segunda fila de filtros -->
+      <div class="filters-grid-secondary">
+        <div>
+          <div class="field-label">Uso principal</div>
+          <select id="filtroUso" class="select">
+            <option value="">Cualquiera</option>
+            <option value="Campamento de verano">Campamento de verano</option>
+            <option value="Convivencia fin de semana">Convivencia fin de semana</option>
+            <option value="Retiro / espiritualidad">Retiro / espiritualidad</option>
+            <option value="Formación">Formación</option>
+            <option value="Multiuso">Multiuso</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label">Régimen</div>
+          <select id="filtroRegimen" class="select">
+            <option value="">Cualquiera</option>
+            <option value="PC">Pensión completa</option>
+            <option value="MP">Media pensión</option>
+            <option value="SA">Solo alojamiento</option>
+            <option value="Alquiler íntegro">Alquiler íntegro</option>
+            <option value="Otro">Otro</option>
           </select>
         </div>
         <div>
           <div class="field-label">Plazas mínimas</div>
-          <input id="filtroPlazas" class="input" type="number" min="0" placeholder="Ej: 40" />
+          <input id="filtroPlazasMin" class="input" type="number" min="0" placeholder="Ej: 40" />
+        </div>
+        <div>
+          <div class="field-label">Plazas máximas</div>
+          <input id="filtroPlazasMax" class="input" type="number" min="0" placeholder="Ej: 120" />
         </div>
       </div>
 
+      <!-- Checkboxes de características -->
       <div class="filters-bottom">
         <div class="checkboxes">
-          <label>
-            <input id="filtroPiscina" type="checkbox" />
-            <span>Piscina</span>
-          </label>
-          <label>
-            <input id="filtroAccesible" type="checkbox" />
-            <span>Accesible</span>
-          </label>
-          <label>
-            <input id="filtroAlquilerExclusivo" type="checkbox" />
-            <span>Alquiler exclusivo</span>
-          </label>
+          <label><input id="filtroPiscina" type="checkbox" /><span>Piscina</span></label>
+          <label><input id="filtroAccesible" type="checkbox" /><span>Accesible</span></label>
+          <label><input id="filtroAlquilerExclusivo" type="checkbox" /><span>Alquiler exclusivo</span></label>
+          <label><input id="filtroCampoDeportivo" type="checkbox" /><span>Campo deportivo</span></label>
+          <label><input id="filtroCocinaIndustrial" type="checkbox" /><span>Cocina industrial</span></label>
+          <label><input id="filtroCocinaPropia" type="checkbox" /><span>Cocina propia</span></label>
+          <label><input id="filtroSalaMultiusos" type="checkbox" /><span>Sala multiusos</span></label>
+          <label><input id="filtroZonaExterior" type="checkbox" /><span>Zona exterior grande</span></label>
+          <label><input id="filtroSombra" type="checkbox" /><span>Sombra exterior</span></label>
+          <label><input id="filtroTransportePublico" type="checkbox" /><span>Transporte público</span></label>
+          <label><input id="filtroAccesoBus" type="checkbox" /><span>Acceso bus</span></label>
+          <label><input id="filtroParking" type="checkbox" /><span>Parking</span></label>
+          <label><input id="filtroCalefaccion" type="checkbox" /><span>Calefacción</span></label>
+          <label><input id="filtroAire" type="checkbox" /><span>Aire acondicionado</span></label>
+          <label><input id="filtroVallado" type="checkbox" /><span>Recinto vallado</span></label>
         </div>
+
         <div class="filters-actions">
           <button id="btnLimpiar" class="btn btn-secondary">Limpiar filtros</button>
         </div>
@@ -386,12 +485,11 @@
     </div>
   </div>
 
-    <!-- Firebase compat (app + Firestore) -->
+  <!-- Firebase compat (app + Firestore) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
-    // 1) Configuración de tu proyecto Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyD_qFTqRsPwHTO9P8nyfikyWSAV1kt7k90",
       authDomain: "red-albergues.firebaseapp.com",
@@ -402,15 +500,12 @@
       measurementId: "G-JZXCJFMMEB"
     };
 
-    // 2) Inicializar Firebase y Firestore
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // 3) Estado en memoria
     let instalaciones = [];
     let inicialOrdenadas = [];
 
-    // 4) Referencias al DOM
     const listaInstalacionesEl = document.getElementById("listaInstalaciones");
     const contadorResultadosEl = document.getElementById("contadorResultados");
     const emptyStateEl = document.getElementById("emptyState");
@@ -418,20 +513,44 @@
     const filtroTextoEl = document.getElementById("filtroTexto");
     const filtroComunidadEl = document.getElementById("filtroComunidad");
     const filtroTipoEl = document.getElementById("filtroTipo");
-    const filtroPlazasEl = document.getElementById("filtroPlazas");
+    const filtroEntornoEl = document.getElementById("filtroEntorno");
+    const filtroUsoEl = document.getElementById("filtroUso");
+    const filtroRegimenEl = document.getElementById("filtroRegimen");
+    const filtroPlazasMinEl = document.getElementById("filtroPlazasMin");
+    const filtroPlazasMaxEl = document.getElementById("filtroPlazasMax");
+
     const filtroPiscinaEl = document.getElementById("filtroPiscina");
     const filtroAccesibleEl = document.getElementById("filtroAccesible");
     const filtroAlquilerExclusivoEl = document.getElementById("filtroAlquilerExclusivo");
+    const filtroCampoDeportivoEl = document.getElementById("filtroCampoDeportivo");
+    const filtroCocinaIndustrialEl = document.getElementById("filtroCocinaIndustrial");
+    const filtroCocinaPropiaEl = document.getElementById("filtroCocinaPropia");
+    const filtroSalaMultiusosEl = document.getElementById("filtroSalaMultiusos");
+    const filtroZonaExteriorEl = document.getElementById("filtroZonaExterior");
+    const filtroSombraEl = document.getElementById("filtroSombra");
+    const filtroTransportePublicoEl = document.getElementById("filtroTransportePublico");
+    const filtroAccesoBusEl = document.getElementById("filtroAccesoBus");
+    const filtroParkingEl = document.getElementById("filtroParking");
+    const filtroCalefaccionEl = document.getElementById("filtroCalefaccion");
+    const filtroAireEl = document.getElementById("filtroAire");
+    const filtroValladoEl = document.getElementById("filtroVallado");
+
     const btnLimpiar = document.getElementById("btnLimpiar");
 
     function formatearCapacidad(inst) {
-      if (inst.plazas_min && inst.plazas_max) {
-        return `De ${inst.plazas_min} a ${inst.plazas_max} plazas`;
-      }
-      if (inst.plazas_max) {
-        return `Hasta ${inst.plazas_max} plazas`;
-      }
+      const min = inst.plazas_min ?? null;
+      const max = inst.plazas_max ?? null;
+
+      if (min && max) return `De ${min} a ${max} plazas`;
+      if (max) return `Hasta ${max} plazas`;
+      if (min) return `A partir de ${min} plazas`;
       return "Capacidad no especificada";
+    }
+
+    function formatearFecha(ts) {
+      if (!ts || !ts.toDate) return "Fecha sin especificar";
+      const d = ts.toDate();
+      return d.toLocaleDateString("es-ES", { year: "numeric", month: "short" });
     }
 
     function pintarInstalaciones(lista) {
@@ -453,33 +572,63 @@
         const card = document.createElement("article");
         card.className = "card";
 
+        const comunidad = inst.comunidad || "Sin información";
+        const provincia = inst.provincia || "Sin información";
+        const municipio = inst.municipio || "Sin información";
+        const entorno = inst.entorno || "Sin información";
+        const uso = inst.uso_principal || "Sin información";
+        const regimen = inst.regimen || "Sin información";
+        const notasPublicas = inst.notas_publicas === "Sin información" ? "" : (inst.notas_publicas || "");
+        const actualizacion = formatearFecha(inst.ultima_actualizacion || inst.creado_en);
+
         card.innerHTML = `
           <div class="card-header">
             <div>
-              <div class="card-title">${inst.nombre}</div>
+              <div class="card-title">${inst.nombre || "Instalación sin nombre"}</div>
               <div class="card-location">
-                ${inst.municipio || "Sin información"} ·
-                ${inst.provincia || "Sin información"} ·
-                ${inst.comunidad || "Sin información"}
+                ${municipio} · ${provincia} · ${comunidad}
               </div>
             </div>
             <span class="chip-tipo">${inst.tipo || "Sin información"}</span>
           </div>
+
           <div class="card-capacidad">${formatearCapacidad(inst)}</div>
+
+          <div class="card-subinfo">
+            <strong>Entorno:</strong> ${entorno} ·
+            <strong>Uso:</strong> ${uso} ·
+            <strong>Régimen:</strong> ${regimen}
+          </div>
+
+          ${notasPublicas
+            ? `<div class="card-subinfo"><strong>Notas:</strong> ${notasPublicas}</div>`
+            : ""
+          }
+
           <div class="card-tags">
             ${inst.piscina ? `<span class="tag tag-positive">Piscina</span>` : ""}
             ${inst.tiene_campo_deportivo ? `<span class="tag">Campo deportivo</span>` : ""}
+            ${inst.zona_exterior_grande ? `<span class="tag">Zona exterior grande</span>` : ""}
+            ${inst.sombra_exterior ? `<span class="tag">Sombra</span>` : ""}
+            ${inst.cocina_industrial ? `<span class="tag">Cocina industrial</span>` : ""}
+            ${inst.cocina_propia ? `<span class="tag">Cocina propia</span>` : ""}
+            ${inst.sala_multiusos ? `<span class="tag">Sala multiusos</span>` : ""}
+            ${inst.transporte_publico ? `<span class="tag">Transporte público</span>` : ""}
+            ${inst.acceso_bus ? `<span class="tag">Acceso bus</span>` : ""}
+            ${inst.parking ? `<span class="tag">Parking</span>` : ""}
             ${inst.accesible ? `<span class="tag">Accesible</span>` : ""}
             ${inst.alquiler_exclusivo ? `<span class="tag">Alquiler exclusivo</span>` : ""}
+            ${inst.calefaccion ? `<span class="tag">Calefacción</span>` : ""}
+            ${inst.aire_acondicionado ? `<span class="tag">Aire acondicionado</span>` : ""}
+            ${inst.vallado ? `<span class="tag">Recinto vallado</span>` : ""}
           </div>
+
           <div class="card-footer">
             <div class="valoracion">
               ${"★".repeat(inst.valoracion_interna || 0)}
-              <span style="color:#9ca3af;">${inst.valoracion_interna || "-"}/5</span>
+              <span style="color:#9ca3af;">${inst.valoracion_interna || "-"} / 5</span>
             </div>
-            <button class="btn btn-primary">
-              Ver detalles
-            </button>
+            <div>Actualizado: ${actualizacion}</div>
           </div>
         `;
 
@@ -491,23 +640,67 @@
       const texto = filtroTextoEl.value.trim().toLowerCase();
       const comunidad = filtroComunidadEl.value;
       const tipo = filtroTipoEl.value;
-      const plazasMin = Number(filtroPlazasEl.value) || 0;
+      const entorno = filtroEntornoEl.value;
+      const uso = filtroUsoEl.value;
+      const regimen = filtroRegimenEl.value;
+      const plazasMin = Number(filtroPlazasMinEl.value) || 0;
+      const plazasMax = Number(filtroPlazasMaxEl.value) || 0;
+
       const piscina = filtroPiscinaEl.checked;
       const accesible = filtroAccesibleEl.checked;
       const alquilerExclusivo = filtroAlquilerExclusivoEl.checked;
+      const campoDep = filtroCampoDeportivoEl.checked;
+      const cocinaInd = filtroCocinaIndustrialEl.checked;
+      const cocinaProp = filtroCocinaPropiaEl.checked;
+      const sala = filtroSalaMultiusosEl.checked;
+      const zonaExt = filtroZonaExteriorEl.checked;
+      const sombra = filtroSombraEl.checked;
+      const transpPub = filtroTransportePublicoEl.checked;
+      const accesoBus = filtroAccesoBusEl.checked;
+      const parking = filtroParkingEl.checked;
+      const calef = filtroCalefaccionEl.checked;
+      const aire = filtroAireEl.checked;
+      const vallado = filtroValladoEl.checked;
 
       const filtradas = instalaciones.filter(inst => {
+        const nombre = (inst.nombre || "").toLowerCase();
+        const municipio = (inst.municipio || "").toLowerCase();
+        const provincia = (inst.provincia || "").toLowerCase();
+        const comunidadInst = (inst.comunidad || "").toLowerCase();
+        const notas = (inst.notas_publicas || "").toLowerCase();
+
         if (texto) {
-          const combinado = `${inst.nombre} ${inst.municipio} ${inst.provincia} ${inst.comunidad}`.toLowerCase();
+          const combinado = `${nombre} ${municipio} ${provincia} ${comunidadInst} ${notas}`;
           if (!combinado.includes(texto)) return false;
         }
 
         if (comunidad && inst.comunidad !== comunidad) return false;
         if (tipo && inst.tipo !== tipo) return false;
-        if (plazasMin && (inst.plazas_max || 0) < plazasMin) return false;
+        if (entorno && inst.entorno !== entorno) return false;
+        if (uso && inst.uso_principal !== uso) return false;
+        if (regimen && inst.regimen !== regimen) return false;
+
+        const capMin = inst.plazas_min ?? 0;
+        const capMax = inst.plazas_max ?? 0;
+
+        if (plazasMin && (capMax || capMin) < plazasMin) return false;
+        if (plazasMax && capMin && capMin > plazasMax && capMax && capMax > plazasMax) return false;
+
         if (piscina && !inst.piscina) return false;
         if (accesible && !inst.accesible) return false;
         if (alquilerExclusivo && !inst.alquiler_exclusivo) return false;
+        if (campoDep && !inst.tiene_campo_deportivo) return false;
+        if (cocinaInd && !inst.cocina_industrial) return false;
+        if (cocinaProp && !inst.cocina_propia) return false;
+        if (sala && !inst.sala_multiusos) return false;
+        if (zonaExt && !inst.zona_exterior_grande) return false;
+        if (sombra && !inst.sombra_exterior) return false;
+        if (transpPub && !inst.transporte_publico) return false;
+        if (accesoBus && !inst.acceso_bus) return false;
+        if (parking && !inst.parking) return false;
+        if (calef && !inst.calefaccion) return false;
+        if (aire && !inst.aire_acondicionado) return false;
+        if (vallado && !inst.vallado) return false;
 
         return true;
       });
@@ -519,22 +712,33 @@
       filtroTextoEl.value = "";
       filtroComunidadEl.value = "";
       filtroTipoEl.value = "";
-      filtroPlazasEl.value = "";
-      filtroPiscinaEl.checked = false;
-      filtroAccesibleEl.checked = false;
-      filtroAlquilerExclusivoEl.checked = false;
+      filtroEntornoEl.value = "";
+      filtroUsoEl.value = "";
+      filtroRegimenEl.value = "";
+      filtroPlazasMinEl.value = "";
+      filtroPlazasMaxEl.value = "";
+
+      [
+        filtroPiscinaEl, filtroAccesibleEl, filtroAlquilerExclusivoEl, filtroCampoDeportivoEl,
+        filtroCocinaIndustrialEl, filtroCocinaPropiaEl, filtroSalaMultiusosEl, filtroZonaExteriorEl,
+        filtroSombraEl, filtroTransportePublicoEl, filtroAccesoBusEl, filtroParkingEl,
+        filtroCalefaccionEl, filtroAireEl, filtroValladoEl
+      ].forEach(el => el.checked = false);
 
       pintarInstalaciones(inicialOrdenadas);
     }
 
     [
-      filtroTextoEl, filtroComunidadEl, filtroTipoEl, filtroPlazasEl,
-      filtroPiscinaEl, filtroAccesibleEl, filtroAlquilerExclusivoEl
+      filtroTextoEl, filtroComunidadEl, filtroTipoEl, filtroEntornoEl, filtroUsoEl, filtroRegimenEl,
+      filtroPlazasMinEl, filtroPlazasMaxEl,
+      filtroPiscinaEl, filtroAccesibleEl, filtroAlquilerExclusivoEl, filtroCampoDeportivoEl,
+      filtroCocinaIndustrialEl, filtroCocinaPropiaEl, filtroSalaMultiusosEl, filtroZonaExteriorEl,
+      filtroSombraEl, filtroTransportePublicoEl, filtroAccesoBusEl, filtroParkingEl,
+      filtroCalefaccionEl, filtroAireEl, filtroValladoEl
     ].forEach(el => el.addEventListener("input", aplicarFiltros));
 
     btnLimpiar.addEventListener("click", limpiarFiltros);
 
-    // 5) Cargar datos desde Firestore
     async function cargarInstalaciones() {
       try {
         const snapshot = await db.collection("instalaciones").get();
